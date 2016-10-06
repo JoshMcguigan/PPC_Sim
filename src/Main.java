@@ -2,7 +2,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // Need to modify inverter class to account for possibility of adding deadtime or other local inverter level effects
+        System.out.println("Simulation starting");
 
         Simulator sim = new Simulator();
         
