@@ -1,2 +1,2 @@
 # PPC_Sim
-A simple solar power plant controller simulator
+A very simple solar power plant controller simulator
