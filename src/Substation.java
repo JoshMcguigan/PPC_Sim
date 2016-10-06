@@ -6,10 +6,8 @@ import java.util.stream.*;
 
 public class Substation {
 
-    private double plantPower;
 
     Substation(){
-        plantPower = 0;
     }
 
     public double getPlantPower(double[] invPower){

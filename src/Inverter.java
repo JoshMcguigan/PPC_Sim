@@ -5,10 +5,10 @@ import java.util.Random;
  */
 public class Inverter {
 
-    public final double maxPower; // Inverter Max Power Output in MW
-    public final double maxIrr; // Irradiance required to produce max power in W/m^2
-    public final double variability; // Measure of maximum variability (two-sided) in power output when limited by set point, in units of percent of max power
-    private Random randomizer;
+    private final double maxPower; // Inverter Max Power Output in MW
+    private final double maxIrr; // Irradiance required to produce max power in W/m^2
+    private final double variability; // Measure of maximum variability (two-sided) in power output when limited by set point, in units of percent of max power
+    private final Random randomizer;
 
     Inverter(double maxPower, double maxIrr, double variability){
 
@@ -31,7 +31,7 @@ public class Inverter {
         }
 
         // Calculate set point power limit in MW
-        double powerSetPointLimit = maxPower * powerSetPoint;
+        double powerSetPointLimit = maxPower * powerSetPoint / 100;
 
         // Calculate irradiance power limit in MW
         double irrPowerLimit = ( Math.min(maxIrr, irr) / maxIrr ) * maxPower;
