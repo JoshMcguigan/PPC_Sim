@@ -2,7 +2,7 @@ public class Main {
 
     public static void main(String[] args) {
 
-        // Modify inverter class so it must be instantiated so time delay or other things could be added
+        // Need to modify inverter class to account for possibility of adding deadtime or other local inverter effects
 
         Simulator sim = new Simulator();
 
@@ -10,6 +10,8 @@ public class Main {
             System.out.println("Step " + i);
             sim.simStep();
         }
+
+        System.out.println("Simulation complete");
 
 
     }
