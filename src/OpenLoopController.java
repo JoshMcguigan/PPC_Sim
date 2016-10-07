@@ -9,7 +9,6 @@ public class OpenLoopController extends AbstractController{
         super(invQuantity, invPowerMax);
     }
 
-    @Override
     public double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower){
 
 
@@ -20,5 +19,9 @@ public class OpenLoopController extends AbstractController{
 
         return powerSetPoints;
 
+    }
+
+    public String getControllerName(){
+        return "Open Loop Controller";
     }
 }

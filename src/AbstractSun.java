@@ -28,4 +28,18 @@ public abstract class AbstractSun {
 
     // Logic controlling irradiance levels to each inverter goes here
     public abstract double[] getIrradiance();
+
+    public double[][] getMultiIrradiance(int steps){
+
+        double[][] multiIrr = new double[steps][invQuantity];
+
+        for (int i = 0; i < steps; i++) {
+
+            System.arraycopy(getIrradiance(), 0, multiIrr[i], 0, invQuantity);
+
+        }
+
+        return multiIrr;
+
+    }
 }

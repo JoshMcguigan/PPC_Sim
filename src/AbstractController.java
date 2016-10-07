@@ -28,4 +28,5 @@ public abstract class AbstractController {
 
     public abstract double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower);
 
+    public abstract String getControllerName();
 }
