@@ -4,11 +4,11 @@ import java.util.stream.DoubleStream;
 /**
  * Created by Josh on 10/5/16.
  */
-public class ControllerSimulator {
+public class Simulator {
 
-    private final double plantPowerSetPoint = 15.0;
     private final int invQuantity;
     private final double maxIrr;
+    private final double invMaxPower;
     private final double invMaxIrr = 1400;
     private final double invVariability = 1;
     private double[] irradiance;
@@ -20,11 +20,11 @@ public class ControllerSimulator {
     private AbstractController controller;
     private Substation substation;
 
-    ControllerSimulator(int invQuantity, double maxIrr, double invMaxPower, AbstractController controller){
+    Simulator(int invQuantity, double maxIrr, double invMaxPower){
 
         this.invQuantity = invQuantity;
         this.maxIrr = maxIrr;
-        this.controller = controller;
+        this.invMaxPower = invMaxPower;
 
         irradiance = new double[invQuantity];
         powerSetPoints = new double[invQuantity];
@@ -39,21 +39,23 @@ public class ControllerSimulator {
 
     }
 
-    public PlantData[] simRun(double[][] irradiance){
+    public PlantData[] simRun(double[][] irradiance, double[] plantPowerSetPoints, AbstractController controller){
+
+        this.controller = controller;
 
         int steps = irradiance.length;
 
         PlantData[] plantData = new PlantData[steps];
 
         for (int i = 0; i < steps; i++) {
-            plantData[i] = simStep(irradiance[i]);
+            plantData[i] = simStep(irradiance[i], plantPowerSetPoints[i]);
         }
 
         return plantData;
     }
 
 
-    private PlantData simStep(double[] irradiance){
+    private PlantData simStep(double[] irradiance, double plantPowerSetPoint){
 
         double avgIrr = DoubleStream.of(irradiance).sum() / irradiance.length;
         double plantPower = substation.getPlantPower(invPower);

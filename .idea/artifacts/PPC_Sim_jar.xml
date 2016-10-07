@@ -1,0 +1,10 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="PPC_Sim:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/PPC_Sim_jar</output-path>
+    <root id="archive" name="PPC_Sim.jar">
+      <element id="module-output" name="PPC_Sim" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/jcommon-1.0.23.jar" path-in-jar="/" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/libs/jfreechart-1.0.19.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
