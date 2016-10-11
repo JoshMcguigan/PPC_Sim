@@ -7,13 +7,16 @@
     <groupId>com.github.joshmcguigan</groupId>
     <artifactId>PPC_Sim</artifactId>
     <version>1.0.1</version>
+    
 
     <dependencies>
+
         <dependency>
             <groupId>org.jfree</groupId>
             <artifactId>jfreechart-min</artifactId>
             <version>1.0.0</version>
         </dependency>
+
     </dependencies>
 
 </project>
