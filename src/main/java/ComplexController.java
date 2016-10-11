@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.stream.DoubleStream;
 
 /**
  * Created by Josh on 10/6/16.
@@ -46,6 +47,8 @@ public class ComplexController extends AbstractController {
                 powerSetPoints[i] *= .94;
             }
         }
+
+        powerSetPoint = Math.min(powerSetPoint, Arrays.stream(powerSetPoints).max().getAsDouble());
 
         return powerSetPoints;
 
