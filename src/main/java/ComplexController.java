@@ -3,7 +3,7 @@ import java.util.Arrays;
 /**
  * Created by Josh on 10/6/16.
  */
-public class ProportionalStepController extends AbstractController {
+public class ComplexController extends AbstractController {
     // This is a simple closed loop controller which calculates a single value to send to all inverters
     // Controller steps the power set point in order to move the plant power output in the direction of the set point
     private double maxStepSize = 2.5; // in %
@@ -12,8 +12,10 @@ public class ProportionalStepController extends AbstractController {
 
     private double powerSetPoint = 50; // in %, sent to every inverter
 
-    ProportionalStepController(int invQuantity, double invPowerMax) {
+    ComplexController(int invQuantity, double invPowerMax) {
         super(invQuantity, invPowerMax);
+
+        Arrays.fill(powerSetPoints, powerSetPoint);
     }
 
 
@@ -34,13 +36,22 @@ public class ProportionalStepController extends AbstractController {
         // Limit set point to between min and max values
         powerSetPoint = Math.max(Math.min(maxPowerSetPoint, powerSetPoint), minPowerSetPoint);
 
-        Arrays.fill(powerSetPoints, powerSetPoint);
+        for (int i = 0; i < powerSetPoints.length; i++) {
+
+            if (powerSetPoints[i] > powerSetPoint){
+                powerSetPoints[i] = powerSetPoint;
+            } else if ((currentInverterPower[i] / invPowerMax) > (powerSetPoints[i] * .01 * .98)) {
+                powerSetPoints[i] = Math.min(powerSetPoint, (currentInverterPower[i]/invPowerMax)*102);
+            } else if ((currentInverterPower[i] / invPowerMax) < (powerSetPoints[i]* .01 * .96 )) {
+                powerSetPoints[i] *= .94;
+            }
+        }
 
         return powerSetPoints;
 
     }
 
     public String getControllerName(){
-        return "Proportional Step Controller";
+        return "Complex Controller";
     }
 }

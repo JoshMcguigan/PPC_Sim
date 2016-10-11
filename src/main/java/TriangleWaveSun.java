@@ -3,7 +3,7 @@ import java.util.stream.DoubleStream;
 /**
  * Created by Josh on 10/6/16.
  */
-public class SimpleTriangleWaveSun extends AbstractSun{
+public class TriangleWaveSun extends AbstractSun{
 
     private int stepSize = 25;
     private double baseIrr;
@@ -12,8 +12,9 @@ public class SimpleTriangleWaveSun extends AbstractSun{
     private double irradiance;
     private double[] noiseyIrr;
     private double irrNoiseLevel = .01; // measure of how different the irradiance level to each inverter is
+    private double cloudiness = 300; // measure of cloudiness
 
-    SimpleTriangleWaveSun(double maxIrr, int invQuantity){
+    TriangleWaveSun(double maxIrr, int invQuantity){
 
         super(maxIrr, invQuantity);
 
@@ -46,7 +47,13 @@ public class SimpleTriangleWaveSun extends AbstractSun{
         // Add a little noise to the irradiance value for each inverter
         for (int i = 0; i < noiseyIrr.length; i++) {
             noiseyIrr[i] = irradiance + ( ( randomizer.nextDouble() - 0.5 ) * maxIrr * irrNoiseLevel );
+
+            // add some cloudiness for part of array
+            if (i < noiseyIrr.length / 2){
+                noiseyIrr[i] -= cloudiness;
+            }
         }
+
 
         irrAvg = DoubleStream.of(noiseyIrr).sum() / noiseyIrr.length;
 

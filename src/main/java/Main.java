@@ -23,7 +23,7 @@ public class Main {
         System.out.println("Simulation starting");
 
         // Instantiate simulation objects
-        AbstractSun sun = new CloudySun(maxIrr, invQuantity);
+        AbstractSun sun = new SquareWaveSun(maxIrr, invQuantity);
         Simulator sim = new Simulator(invQuantity, maxIrr, invMaxPower);
 
         // Create list of controllers to test
@@ -31,6 +31,7 @@ public class Main {
         controllers.add(new NaiveController(invQuantity, invMaxPower));
         controllers.add(new OpenLoopController(invQuantity, invMaxPower));
         controllers.add(new ProportionalStepController(invQuantity, invMaxPower));
+        controllers.add(new ComplexController(invQuantity, invMaxPower));
 
         // Get irradiance values for each step, for each inverter
         double[][] multiIrr = sun.getMultiIrradiance(steps);
@@ -62,7 +63,7 @@ public class Main {
             public void run() {
                 JFrame frame = new JFrame("Charts");
 
-                frame.setSize(600, 400);
+                frame.setSize(800, 600);
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setVisible(true);
 

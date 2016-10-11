@@ -3,18 +3,20 @@ import java.util.stream.DoubleStream;
 /**
  * Created by Josh on 10/6/16.
  */
-public class CloudySun extends AbstractSun{
+public class SquareWaveSun extends AbstractSun{
 
-    private int stepSize = 25;
+    private int period = 25; // number of steps at each state (high or low)
     private double baseIrr;
     private double range = 100;
     private double maxIrr;
     private double irradiance;
     private double[] noiseyIrr;
     private double irrNoiseLevel = .01; // measure of how different the irradiance level to each inverter is
-    private double cloudiness = 500; // measure of cloudiness
+    private int periodStepCount; // simulation step counter, resets every period
+    private boolean irrHigh; // Bit to track whether irradiance is at high or low level
+    private int cloudiness = 300;
 
-    CloudySun(double maxIrr, int invQuantity){
+    SquareWaveSun(double maxIrr, int invQuantity){
 
         super(maxIrr, invQuantity);
 
@@ -22,26 +24,31 @@ public class CloudySun extends AbstractSun{
 
         baseIrr = .5 * maxIrr;
 
-        irradiance = baseIrr;
+        irradiance = baseIrr + range;
+        irrHigh = true;
 
         noiseyIrr = new double[invQuantity];
+
+        periodStepCount = 0;
     }
 
     @Override
     public double[] getIrradiance(){
 
-        // Change irradiance baseline by step size
-        irradiance += stepSize;
+        periodStepCount += 1;
 
-        // If irradiance is too high or low, limit the irradiance value and modify sign of step size
-        if ( (irradiance > maxIrr) || (irradiance > baseIrr + range) ){
-            irradiance = Math.min(maxIrr, baseIrr + range);
-            stepSize *= -1;
-        }
+        if (periodStepCount>period){
 
-        if ( (irradiance < 0 ) || (irradiance < baseIrr - range) ){
-            irradiance = Math.max(0.0, baseIrr - range);
-            stepSize *= -1;
+            periodStepCount = 0;
+
+            irrHigh = !irrHigh;
+
+            if (irrHigh){
+                irradiance = baseIrr + range;
+            } else {
+                irradiance = baseIrr - range;
+            }
+
         }
 
         // Add a little noise to the irradiance value for each inverter
@@ -50,10 +57,9 @@ public class CloudySun extends AbstractSun{
 
             // add some cloudiness for part of array
             if (i < noiseyIrr.length / 2){
-                noiseyIrr[i] -= 200;
+                noiseyIrr[i] -= cloudiness;
             }
         }
-
 
         irrAvg = DoubleStream.of(noiseyIrr).sum() / noiseyIrr.length;
 
