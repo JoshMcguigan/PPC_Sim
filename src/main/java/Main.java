@@ -23,7 +23,13 @@ public class Main {
         System.out.println("Simulation starting");
 
         // Instantiate simulation objects
-        AbstractSun sun = new SquareWaveSun(maxIrr, invQuantity);
+
+        /*
+        Choose your sun type for the simulation
+         */
+        //AbstractSun sun = new SquareWaveSun(maxIrr, invQuantity);
+        AbstractSun sun = new TriangleWaveSun(maxIrr, invQuantity);
+
         Simulator sim = new Simulator(invQuantity, maxIrr, invMaxPower);
 
         // Create list of controllers to test
