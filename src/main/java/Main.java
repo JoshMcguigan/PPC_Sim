@@ -11,6 +11,21 @@ import java.util.List;
 
 public class Main {
 
+    /*
+    Todo
+    Modify ComplexController code to target middle of deadband for increases of power as well as decreases
+    Figure out why ComplexController is able to ramp up with irradiance changes faster than max ramp rate
+    Write tests
+    Create sine wave sun
+    Test ComplexController for set point step changes with relatively constant irradiance
+    Change from steps to time base (this deserves a branch)
+    Separate display logic from main logic, implement some analytics, possibly some interaction from GUI?
+    Ability to interface with actual plant controller for testing and analysis
+    Ability to use real irradiance values from an import file
+     */
+
+
+
     private static final int invQuantity = 20;
     private static final double maxIrr = 1500;
     private static final int steps = 100;
