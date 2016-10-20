@@ -14,10 +14,8 @@ public class Main {
     /*
     Todo
     Figure out why ComplexController is able to ramp up with irradiance changes faster than max ramp rate
-    Write tests
     Create sine wave sun
     Test ComplexController for set point step changes with relatively constant irradiance
-    Change from steps to time base (this deserves a branch)
     Separate display logic from main logic, implement some analytics, possibly some interaction from GUI?
     Confirm set point outputs to each inverters varies over time, ensure set points equalize over time
     Implement ability to simulate inverters going offline (either just loss of comms but still producing or inverter turning completely off)
