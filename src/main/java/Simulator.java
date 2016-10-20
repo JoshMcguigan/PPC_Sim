@@ -16,7 +16,11 @@ public class Simulator {
     private AbstractController controller;
     private Substation substation;
 
-    Simulator(int invQuantity, double invMaxPower){
+    private static double simLength; // simulation time in seconds
+    private static double simStepSize; // simulation step size in seconds
+    private static int steps;
+
+    Simulator(int invQuantity, double invMaxPower, double simLength, double simStepSize, int steps){
 
         this.invQuantity = invQuantity;
 
@@ -29,6 +33,10 @@ public class Simulator {
         // Instantiate the inverter array with identical inverters
         Arrays.fill(inverter, new Inverter(invMaxPower, invMaxIrr, invVariability));
 
+        this.simLength = simLength;
+        this.simStepSize = simStepSize;
+        this.steps = steps;
+
     }
 
     public PlantData[] simRun(AbstractSun sun, AbstractSetPoint setPoint, AbstractController controller, int steps){
@@ -38,14 +46,14 @@ public class Simulator {
         PlantData[] plantData = new PlantData[steps];
 
         for (int i = 0; i < steps; i++) {
-            plantData[i] = simStep(sun.getIrradiance(i), setPoint.getSetPoint(i));
+            plantData[i] = simStep(sun.getIrradiance(i*simStepSize), setPoint.getSetPoint(i*simStepSize), i*simStepSize);
         }
 
         return plantData;
     }
 
 
-    private PlantData simStep(double[] irradiance, double plantPowerSetPoint){
+    private PlantData simStep(double[] irradiance, double plantPowerSetPoint, double timeStamp){
 
         double avgIrr = DoubleStream.of(irradiance).sum() / irradiance.length;
         double plantPower = substation.getPlantPower(invPower);
@@ -57,7 +65,7 @@ public class Simulator {
 
         }
 
-        return new PlantData(plantPowerSetPoint, avgIrr, powerSetPoints, invPower, plantPower);
+        return new PlantData(plantPowerSetPoint, avgIrr, powerSetPoints, invPower, plantPower, timeStamp);
 
     }
 }

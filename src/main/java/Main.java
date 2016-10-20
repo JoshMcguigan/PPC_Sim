@@ -6,7 +6,6 @@ import org.jfree.data.xy.DefaultXYDataset;
 
 import javax.swing.*;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class Main {
@@ -25,25 +24,22 @@ public class Main {
 
     /*
     For feature-time-base branch, consider:
-    Pre-calculating irradiance arrays will consume way too much memory (FIXED)
-    Pre-forming set point arrays will take way too much memory (FIXED)
     Saving data points from every step is probably too much memory (this should be configurable)
-    One scan as .1 seconds is more than enough resolution
-        this can be configurable, simply have simulator keep track of time and increment as appropriate
+        maybe create a data recorder class for this? or maybe not
     irradiance can update every scan (reduce random effect)
     inverters can run every scan, act on irradiance changes immediately but set point changes have small delay
         this delay accounts for delay in inverter recieving command and implementing it
     substation can have delay which is delay in reading and reporting data
     controllers can act on current information, but only execute every X seconds (3 or 5 would be a decent start)
-    for now, continue to just feed in static set point but do it per step (FIXED)
-    need to modify chart to show data vs time rather than step
      */
 
 
 
     private static final int invQuantity = 20;
     private static final double maxIrr = 1500;
-    private static final int steps = 100;
+    private static final double simLength = 50; // simulation time in seconds
+    private static final double simStepSize = .5; // simulation step size in seconds
+    private static final int steps = (int)(simLength/simStepSize);
     private static final double invMaxPower = 2.2;
     private static List<AbstractController> controllers;
 
@@ -53,7 +49,7 @@ public class Main {
         System.out.println("Simulation starting");
 
         // Instantiate simulation object
-        Simulator sim = new Simulator(invQuantity, invMaxPower);
+        Simulator sim = new Simulator(invQuantity, invMaxPower, simLength, simStepSize, steps);
 
         // Create list of controllers to test
         controllers = new ArrayList<AbstractController>(0);
@@ -66,7 +62,7 @@ public class Main {
         // [controller][step]
         PlantData[][] simResults = new PlantData[controllers.size()][steps];
 
-        // Run simulation once per controller, with the same irradiance values
+        // Run simulation once per controller
         String[] controllerNames = new String[controllers.size()];
         for (int i = 0; i < controllers.size(); i++) {
             simResults[i] = sim.simRun(new TriangleWaveSun(maxIrr, invQuantity), new ConstantSetPoint(19), controllers.get(i), steps);
@@ -82,7 +78,7 @@ public class Main {
     private static void makeChart(PlantData[][] plantData, String[] controllerNames) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
-                JFrame frame = new JFrame("Charts");
+                JFrame frame = new JFrame("PPC Simulator");
 
                 frame.setSize(800, 600);
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -93,8 +89,9 @@ public class Main {
                 // Create set point data set
                 double[][] chartData = new double[2][plantData[0].length];
 
+                // chartData[0=x,1=y][data point instance]
                 for (int i = 0; i < plantData[0].length; i++) {
-                    chartData[0][i] = i;
+                    chartData[0][i] = plantData[0][i].timeStamp;
                     chartData[1][i] = plantData[0][i].plantSetPoint;
                 }
 
@@ -108,7 +105,7 @@ public class Main {
 
                     for (int i = 0; i < plantData[controller].length; i++) {
                         // x coordinate
-                        chartData[0][i] = i;
+                        chartData[0][i] = plantData[0][i].timeStamp;
 
                         // y coordinate
                         chartData[1][i] = plantData[controller][i].plantPowerOutput;
@@ -117,8 +114,8 @@ public class Main {
                     ds.addSeries(controllerNames[controller], chartData);
                 }
 
-                JFreeChart chart = ChartFactory.createXYLineChart("Plant Output (MW) vs. Simulation Step",
-                        "Simulation Step", "Plant Output (MW)", ds, PlotOrientation.VERTICAL, true, true,
+                JFreeChart chart = ChartFactory.createXYLineChart("Plant Output (MW) vs. Time (sec)",
+                        "Time (sec)", "Plant Output (MW)", ds, PlotOrientation.VERTICAL, true, true,
                         false);
 
                 ChartPanel cp = new ChartPanel(chart);
