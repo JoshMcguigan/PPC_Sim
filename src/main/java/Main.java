@@ -23,6 +23,22 @@ public class Main {
     Ability to use real irradiance values from an import file
      */
 
+    /*
+    For feature-time-base branch, consider:
+    Pre-calculating irradiance arrays will consume way too much memory (FIXED)
+    Pre-forming set point arrays will take way too much memory (FIXED)
+    Saving data points from every step is probably too much memory (this should be configurable)
+    One scan as .1 seconds is more than enough resolution
+        this can be configurable, simply have simulator keep track of time and increment as appropriate
+    irradiance can update every scan (reduce random effect)
+    inverters can run every scan, act on irradiance changes immediately but set point changes have small delay
+        this delay accounts for delay in inverter recieving command and implementing it
+    substation can have delay which is delay in reading and reporting data
+    controllers can act on current information, but only execute every X seconds (3 or 5 would be a decent start)
+    for now, continue to just feed in static set point but do it per step (FIXED)
+    need to modify chart to show data vs time rather than step
+     */
+
 
 
     private static final int invQuantity = 20;
@@ -36,15 +52,8 @@ public class Main {
 
         System.out.println("Simulation starting");
 
-        // Instantiate simulation objects
-
-        /*
-        Choose your sun type for the simulation
-         */
-        //AbstractSun sun = new SquareWaveSun(maxIrr, invQuantity);
-        AbstractSun sun = new TriangleWaveSun(maxIrr, invQuantity);
-
-        Simulator sim = new Simulator(invQuantity, maxIrr, invMaxPower);
+        // Instantiate simulation object
+        Simulator sim = new Simulator(invQuantity, invMaxPower);
 
         // Create list of controllers to test
         controllers = new ArrayList<AbstractController>(0);
@@ -53,14 +62,6 @@ public class Main {
         controllers.add(new ProportionalStepController(invQuantity, invMaxPower));
         controllers.add(new ComplexController(invQuantity, invMaxPower));
 
-        // Get irradiance values for each step, for each inverter
-        double[][] multiIrr = sun.getMultiIrradiance(steps);
-
-        // Create an array of set point values for the simulation
-        // For now, set point kept constant through all steps of simulation
-        double[] plantPowerSetPoints = new double[steps];
-        Arrays.fill(plantPowerSetPoints, 19);
-
         // Create 2d array to store results of simulation
         // [controller][step]
         PlantData[][] simResults = new PlantData[controllers.size()][steps];
@@ -68,17 +69,17 @@ public class Main {
         // Run simulation once per controller, with the same irradiance values
         String[] controllerNames = new String[controllers.size()];
         for (int i = 0; i < controllers.size(); i++) {
-            simResults[i] = sim.simRun(multiIrr, plantPowerSetPoints, controllers.get(i));
+            simResults[i] = sim.simRun(new TriangleWaveSun(maxIrr, invQuantity), new ConstantSetPoint(19), controllers.get(i), steps);
             controllerNames[i] = controllers.get(i).getControllerName();
         }
 
         System.out.println("Simulation complete");
 
-        makeChart(simResults, plantPowerSetPoints, controllerNames);
+        makeChart(simResults, controllerNames);
 
     }
 
-    private static void makeChart(PlantData[][] plantData, double[] plantPowerSetPoints, String[] controllerNames) {
+    private static void makeChart(PlantData[][] plantData, String[] controllerNames) {
         SwingUtilities.invokeLater(new Runnable() {
             public void run() {
                 JFrame frame = new JFrame("Charts");
@@ -90,11 +91,11 @@ public class Main {
                 DefaultXYDataset ds = new DefaultXYDataset();
 
                 // Create set point data set
-                double[][] chartData = new double[2][plantPowerSetPoints.length];
+                double[][] chartData = new double[2][plantData[0].length];
 
-                for (int i = 0; i < plantPowerSetPoints.length; i++) {
+                for (int i = 0; i < plantData[0].length; i++) {
                     chartData[0][i] = i;
-                    chartData[1][i] = plantPowerSetPoints[i];
+                    chartData[1][i] = plantData[0][i].plantSetPoint;
                 }
 
                 ds.addSeries("Set Point", chartData);

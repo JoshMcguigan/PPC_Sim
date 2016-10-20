@@ -7,30 +7,22 @@ import java.util.stream.DoubleStream;
 public class Simulator {
 
     private final int invQuantity;
-    private final double maxIrr;
-    private final double invMaxPower;
     private final double invMaxIrr = 1400;
     private final double invVariability = 1;
-    private double[] irradiance;
     private double[] powerSetPoints;
     private double[] invPower;
 
-    private AbstractSun sun;
     private Inverter[] inverter;
     private AbstractController controller;
     private Substation substation;
 
-    Simulator(int invQuantity, double maxIrr, double invMaxPower){
+    Simulator(int invQuantity, double invMaxPower){
 
         this.invQuantity = invQuantity;
-        this.maxIrr = maxIrr;
-        this.invMaxPower = invMaxPower;
 
-        irradiance = new double[invQuantity];
         powerSetPoints = new double[invQuantity];
         invPower = new double[invQuantity];
 
-        sun = new SimpleRandomSun(maxIrr, invQuantity);
         inverter = new Inverter[invQuantity];
         substation = new Substation();
 
@@ -39,16 +31,14 @@ public class Simulator {
 
     }
 
-    public PlantData[] simRun(double[][] irradiance, double[] plantPowerSetPoints, AbstractController controller){
+    public PlantData[] simRun(AbstractSun sun, AbstractSetPoint setPoint, AbstractController controller, int steps){
 
         this.controller = controller;
-
-        int steps = irradiance.length;
 
         PlantData[] plantData = new PlantData[steps];
 
         for (int i = 0; i < steps; i++) {
-            plantData[i] = simStep(irradiance[i], plantPowerSetPoints[i]);
+            plantData[i] = simStep(sun.getIrradiance(i), setPoint.getSetPoint(i));
         }
 
         return plantData;
@@ -67,9 +57,7 @@ public class Simulator {
 
         }
 
-        PlantData plantData = new PlantData(plantPowerSetPoint, avgIrr, powerSetPoints, invPower, plantPower);
-
-        return plantData;
+        return new PlantData(plantPowerSetPoint, avgIrr, powerSetPoints, invPower, plantPower);
 
     }
 }

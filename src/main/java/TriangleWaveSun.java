@@ -5,7 +5,7 @@ import java.util.stream.DoubleStream;
  */
 public class TriangleWaveSun extends AbstractSun{
 
-    private int stepSize = 25;
+    private double changeRate = 25; // rate of change, in units of (W/m^2)/sec
     private double baseIrr;
     private double range = 100;
     private double maxIrr;
@@ -28,20 +28,22 @@ public class TriangleWaveSun extends AbstractSun{
     }
 
     @Override
-    public double[] getIrradiance(){
+    public double[] getIrradiance(double timeStamp){
+
+        double timeDelta = updateTimeStamp(timeStamp);
 
         // Change irradiance baseline by step size
-        irradiance += stepSize;
+        irradiance += changeRate * timeDelta;
 
         // If irradiance is too high or low, limit the irradiance value and modify sign of step size
         if ( (irradiance > maxIrr) || (irradiance > baseIrr + range) ){
             irradiance = Math.min(maxIrr, baseIrr + range);
-            stepSize *= -1;
+            changeRate *= -1;
         }
 
         if ( (irradiance < 0 ) || (irradiance < baseIrr - range) ){
             irradiance = Math.max(0.0, baseIrr - range);
-            stepSize *= -1;
+            changeRate *= -1;
         }
 
         // Add a little noise to the irradiance value for each inverter
