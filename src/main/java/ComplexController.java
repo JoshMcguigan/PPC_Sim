@@ -89,7 +89,8 @@ public class ComplexController extends AbstractController {
             // Based on number of inverters performing at set point, calculate max step up size
             // This can be higher than configured max step size because it considers that only inverters which are performing
             //      at set point will be given higher set point commands
-            stepUpSize = Math.min(maxStepSize, ( (plantPowerSetPoint-currentPlantPower-deadBand) / plantPowerMax) * 100 ) * (invQuantity / atSetPointQuantity);
+            // Step size is reduced when current plant power is close to set point, in order to target middle of deadband
+            stepUpSize = Math.min(maxStepSize, ( (plantPowerSetPoint-currentPlantPower-(deadBand/2)) / plantPowerMax) * 100 ) * (invQuantity / atSetPointQuantity);
 
 
             // For inverters which are producing at set point,
