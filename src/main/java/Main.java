@@ -13,7 +13,8 @@ public class Main {
     /*
     Todo
     Pack up all configuration values in preparation for GUI
-    Figure out why ComplexController is able to ramp up with irradiance changes faster than max ramp rate
+    move current graphics into a class of its own
+    Create step change set point
     Create sine wave sun
     Test ComplexController for set point step changes with relatively constant irradiance
     Separate display logic from main logic, implement some analytics, possibly some interaction from GUI?
@@ -22,15 +23,6 @@ public class Main {
     Ability to interface with actual plant controller for testing and analysis
     Ability to use real irradiance values from an import file
      */
-
-    /*
-    For feature-time-base branch, consider:
-    Create abstract controller class with execution rate to capture that logic
-    irradiance can update every scan (reduce random effect)
-    inverters can run every scan, act on irradiance changes immediately but set point changes have small delay
-        this delay accounts for delay in inverter recieving command and implementing it
-     */
-
 
 
     private static final int invQuantity = 20;

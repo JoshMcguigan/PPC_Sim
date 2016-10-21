@@ -9,7 +9,7 @@ public class Simulator {
     private final int invQuantity;
     private final double invMaxIrr = 1400;
     private final double substationDeadTime = 2.0;
-    private final double invVariability = 1;
+    private final double invVariability = 0.5;
     private double[] powerSetPoints;
     private double[] invPower;
 
