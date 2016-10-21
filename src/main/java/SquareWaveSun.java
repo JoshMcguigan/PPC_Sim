@@ -5,14 +5,14 @@ import java.util.stream.DoubleStream;
  */
 public class SquareWaveSun extends AbstractSun{
 
-    private int period = 25; // number of steps at each state (high or low)
+    private double period = 200; // number of seconds at each state (high or low)
+    private double timeLastSwitch; // time stamp of simulation last time state was changed
     private double baseIrr;
     private double range = 100;
     private double maxIrr;
     private double irradiance;
     private double[] noiseyIrr;
     private double irrNoiseLevel = .01; // measure of how different the irradiance level to each inverter is
-    private int periodStepCount; // simulation step counter, resets every period
     private boolean irrHigh; // Bit to track whether irradiance is at high or low level
     private int cloudiness = 300;
 
@@ -29,17 +29,15 @@ public class SquareWaveSun extends AbstractSun{
 
         noiseyIrr = new double[invQuantity];
 
-        periodStepCount = 0;
+        timeLastSwitch = 0;
     }
 
     @Override
-    public double[] getIrradiance(){
+    public double[] getIrradiance(double timeStamp){
 
-        periodStepCount += 1;
+        if ( timeStamp > (timeLastSwitch + period) ){
 
-        if (periodStepCount>period){
-
-            periodStepCount = 0;
+            timeLastSwitch = timeStamp;
 
             irrHigh = !irrHigh;
 

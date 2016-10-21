@@ -3,13 +3,11 @@ import java.util.Arrays;
 /**
  * Created by Josh on 10/6/16.
  */
-public class ComplexController extends AbstractController {
-
-    private double maxStepSize = 2.5; // in % of full plant output
-    private double deadBand = .2; // control dead band in MW
+public class ComplexController extends AbstractTimeBasedController {
 
     private double atSetPointDeadBand = 98; // Inverter must produce at least this fraction of set point to be considered producing at set point, in %
     private double belowSetPointDeadBand = 96; // Inverters producing less than this fraction of set point are considered to be under-producing, in %
+    private double deadBand = .2; // control dead band in MW
 
     private boolean[] belowSetPoint; // Used to track which inverters are underperforming
     private boolean[] atSetPoint; // Used to track inverters which are performing at set point
@@ -21,38 +19,34 @@ public class ComplexController extends AbstractController {
     private boolean overProduction; // Flag set when plant is overproducing
     private boolean inDeadBand; // Flag set when plant is in dead band
 
-    ComplexController(int invQuantity, double invPowerMax) {
+    ComplexController(int invQuantity, double invPowerMax, double executionRate) {
 
-        super(invQuantity, invPowerMax);
+        super(invQuantity, invPowerMax, executionRate);
 
         belowSetPoint = new boolean[invQuantity];
         atSetPoint = new boolean[invQuantity];
         overProduction = false;
         inDeadBand = false;
 
-        // Initialize power controller to set point
-        Arrays.fill(powerSetPoints, 50);
     }
 
 
-    public double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower){
+    public double[] executeController(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
 
         // Determine which inverters are underperforming, and which are at set point
         atSetPointQuantity = 0;
         belowSetPointQuantity = 0;
         for (int i = 0; i < invQuantity; i++) {
-            if ((currentInverterPower[i] / invPowerMax) > (powerSetPoints[i] * atSetPointDeadBand * .0001)){
+            if ((currentInverterPower[i] / invPowerMax) > (powerSetPoints[i] * atSetPointDeadBand * .0001)) {
                 atSetPoint[i] = true;
                 atSetPointQuantity += 1;
-            }
-            else{
+            } else {
                 atSetPoint[i] = false;
             }
-            if ((currentInverterPower[i] / invPowerMax) < (powerSetPoints[i] * belowSetPointDeadBand * .0001 )){
+            if ((currentInverterPower[i] / invPowerMax) < (powerSetPoints[i] * belowSetPointDeadBand * .0001)) {
                 belowSetPoint[i] = true;
                 belowSetPointQuantity += 1;
-            }
-            else{
+            } else {
                 belowSetPoint[i] = false;
             }
         }
@@ -67,13 +61,13 @@ public class ComplexController extends AbstractController {
         if (overProduction) {
 
             // Calculate step down size in order to bring the plant power down to middle of dead band
-            stepDownSize = Math.min(maxStepSize,((currentPlantPower - plantPowerSetPoint + (0.5 * deadBand)) / ( invQuantity * invPowerMax ))*100);
+            stepDownSize = Math.min(maxStepSizePerExecution, ((currentPlantPower - plantPowerSetPoint + (0.5 * deadBand)) / (invQuantity * invPowerMax)) * 100);
 
             for (int i = 0; i < invQuantity; i++) {
                 // Set the reduced power set point based on actual current production
                 powerSetPoints[i] = (currentInverterPower[i] / invPowerMax) * 100 - stepDownSize;
             }
-        } else{
+        } else {
             // Limit inverter set points for inverters which are under producing
             for (int i = 0; i < invQuantity; i++) {
                 if (belowSetPoint[i]) {
@@ -84,13 +78,13 @@ public class ComplexController extends AbstractController {
 
 
         // If plant is producing less than the set point minus dead band, and at least one inverter is performing at set point
-        if (!overProduction && !inDeadBand && (atSetPointQuantity>0)) {
+        if (!overProduction && !inDeadBand && (atSetPointQuantity > 0)) {
 
             // Based on number of inverters performing at set point, calculate max step up size
             // This can be higher than configured max step size because it considers that only inverters which are performing
             //      at set point will be given higher set point commands
             // Step size is reduced when current plant power is close to set point, in order to target middle of deadband
-            stepUpSize = Math.min(maxStepSize, ( (plantPowerSetPoint-currentPlantPower-(deadBand/2)) / plantPowerMax) * 100 ) * (invQuantity / atSetPointQuantity);
+            stepUpSize = Math.min(maxStepSizePerExecution, ((plantPowerSetPoint - currentPlantPower - (deadBand / 2)) / plantPowerMax) * 100) * (invQuantity / atSetPointQuantity);
 
 
             // For inverters which are producing at set point,

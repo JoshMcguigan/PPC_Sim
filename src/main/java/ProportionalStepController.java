@@ -3,31 +3,31 @@ import java.util.Arrays;
 /**
  * Created by Josh on 10/6/16.
  */
-public class ProportionalStepController extends AbstractController {
+public class ProportionalStepController extends AbstractTimeBasedController {
     // This is a simple closed loop controller which calculates a single value to send to all inverters
     // Controller steps the power set point in order to move the plant power output in the direction of the set point
-    private double maxStepSize = 2.5; // in %
     private double gain = 1;
     private double deadband = .2; // control dead band in MW
 
+
     private double powerSetPoint = 50; // in %, sent to every inverter
 
-    ProportionalStepController(int invQuantity, double invPowerMax) {
-        super(invQuantity, invPowerMax);
+    ProportionalStepController(int invQuantity, double invPowerMax , double executionRate) {
+        super(invQuantity, invPowerMax, executionRate);
     }
 
 
-    public double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower){
+    public double[] executeController(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
 
         // If error is within deadband, control action stays constant
-        if (Math.abs(plantPowerSetPoint-currentPlantPower) > deadband ) {
+        if (Math.abs(plantPowerSetPoint - currentPlantPower) > deadband || (currentPlantPower>plantPowerSetPoint)) {
             // If the plant is overproducing, step down the power at the maximum rate
             if (currentPlantPower > plantPowerSetPoint) {
-                powerSetPoint -= maxStepSize;
+                powerSetPoint -= maxStepSizePerExecution;
             }
             // If the plant is underproducing, step up the set point based on gain
             else {
-                powerSetPoint += Math.min(maxStepSize, (plantPowerSetPoint - currentPlantPower) * gain);
+                powerSetPoint += Math.min(maxStepSizePerExecution, (plantPowerSetPoint - currentPlantPower) * gain);
             }
         }
 
@@ -35,6 +35,7 @@ public class ProportionalStepController extends AbstractController {
         powerSetPoint = Math.max(Math.min(maxPowerSetPoint, powerSetPoint), minPowerSetPoint);
 
         Arrays.fill(powerSetPoints, powerSetPoint);
+
 
         return powerSetPoints;
 

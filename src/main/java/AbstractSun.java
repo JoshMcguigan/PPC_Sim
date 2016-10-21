@@ -6,7 +6,7 @@ import java.util.Random;
  */
 
 // Class created to provide irradiance values for each inverter
-public abstract class AbstractSun {
+public abstract class AbstractSun extends AbstractSimulationObject{
 
     protected final double maxIrr;
     protected final int invQuantity;
@@ -15,6 +15,8 @@ public abstract class AbstractSun {
     protected final Random randomizer;
 
     AbstractSun(double maxIrr, int invQuantity){
+
+        super();
 
         this.maxIrr = maxIrr;
         this.invQuantity = invQuantity;
@@ -27,19 +29,6 @@ public abstract class AbstractSun {
     }
 
     // Logic controlling irradiance levels to each inverter goes here
-    public abstract double[] getIrradiance();
+    public abstract double[] getIrradiance(double timeStamp);
 
-    public double[][] getMultiIrradiance(int steps){
-
-        double[][] multiIrr = new double[steps][invQuantity];
-
-        for (int i = 0; i < steps; i++) {
-
-            System.arraycopy(getIrradiance(), 0, multiIrr[i], 0, invQuantity);
-
-        }
-
-        return multiIrr;
-
-    }
 }
