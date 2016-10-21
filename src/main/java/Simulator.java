@@ -8,6 +8,7 @@ public class Simulator {
 
     private final int invQuantity;
     private final double invMaxIrr = 1400;
+    private final double substationDeadTime = 2.0;
     private final double invVariability = 1;
     private double[] powerSetPoints;
     private double[] invPower;
@@ -28,7 +29,7 @@ public class Simulator {
         invPower = new double[invQuantity];
 
         inverter = new Inverter[invQuantity];
-        substation = new Substation();
+        substation = new Substation(substationDeadTime);
 
         // Instantiate the inverter array with identical inverters
         Arrays.fill(inverter, new Inverter(invMaxPower, invMaxIrr, invVariability));
@@ -56,8 +57,8 @@ public class Simulator {
     private PlantData simStep(double[] irradiance, double plantPowerSetPoint, double timeStamp){
 
         double avgIrr = DoubleStream.of(irradiance).sum() / irradiance.length;
-        double plantPower = substation.getPlantPower(invPower);
-        powerSetPoints = controller.getPowerSetPoints(plantPowerSetPoint, plantPower, invPower);
+        double plantPower = substation.getPlantPower(invPower, timeStamp);
+        powerSetPoints = controller.getPowerSetPoints(plantPowerSetPoint, plantPower, invPower, timeStamp);
 
         for (int i = 0; i < invQuantity; i++) {
 

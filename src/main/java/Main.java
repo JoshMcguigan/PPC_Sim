@@ -12,6 +12,7 @@ public class Main {
 
     /*
     Todo
+    Pack up all configuration values in preparation for GUI
     Figure out why ComplexController is able to ramp up with irradiance changes faster than max ramp rate
     Create sine wave sun
     Test ComplexController for set point step changes with relatively constant irradiance
@@ -24,21 +25,19 @@ public class Main {
 
     /*
     For feature-time-base branch, consider:
-    Saving data points from every step is probably too much memory (this should be configurable)
-        maybe create a data recorder class for this? or maybe not
+    Create abstract controller class with execution rate to capture that logic
     irradiance can update every scan (reduce random effect)
     inverters can run every scan, act on irradiance changes immediately but set point changes have small delay
         this delay accounts for delay in inverter recieving command and implementing it
-    substation can have delay which is delay in reading and reporting data
-    controllers can act on current information, but only execute every X seconds (3 or 5 would be a decent start)
      */
 
 
 
     private static final int invQuantity = 20;
     private static final double maxIrr = 1500;
-    private static final double simLength = 50; // simulation time in seconds
+    private static final double simLength = 600; // simulation time in seconds
     private static final double simStepSize = .5; // simulation step size in seconds
+    private static final double controllerExecutionRate = 6; // Rate of controller execution, in seconds
     private static final int steps = (int)(simLength/simStepSize);
     private static final double invMaxPower = 2.2;
     private static List<AbstractController> controllers;
@@ -55,8 +54,8 @@ public class Main {
         controllers = new ArrayList<AbstractController>(0);
         controllers.add(new NaiveController(invQuantity, invMaxPower));
         controllers.add(new OpenLoopController(invQuantity, invMaxPower));
-        controllers.add(new ProportionalStepController(invQuantity, invMaxPower));
-        controllers.add(new ComplexController(invQuantity, invMaxPower));
+        controllers.add(new ProportionalStepController(invQuantity, invMaxPower, controllerExecutionRate));
+        controllers.add(new ComplexController(invQuantity, invMaxPower, controllerExecutionRate));
 
         // Create 2d array to store results of simulation
         // [controller][step]

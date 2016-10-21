@@ -5,7 +5,7 @@ import java.util.stream.DoubleStream;
  */
 public class SquareWaveSun extends AbstractSun{
 
-    private double period = 25; // number of seconds at each state (high or low)
+    private double period = 200; // number of seconds at each state (high or low)
     private double timeLastSwitch; // time stamp of simulation last time state was changed
     private double baseIrr;
     private double range = 100;

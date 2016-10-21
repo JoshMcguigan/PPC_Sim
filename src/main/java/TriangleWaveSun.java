@@ -5,7 +5,7 @@ import java.util.stream.DoubleStream;
  */
 public class TriangleWaveSun extends AbstractSun{
 
-    private double changeRate = 25; // rate of change, in units of (W/m^2)/sec
+    private double changeRate = 1; // rate of change, in units of (W/m^2)/sec
     private double baseIrr;
     private double range = 100;
     private double maxIrr;

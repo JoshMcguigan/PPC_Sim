@@ -9,7 +9,7 @@ public class OpenLoopController extends AbstractController{
         super(invQuantity, invPowerMax);
     }
 
-    public double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower){
+    public double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
 
 
 
