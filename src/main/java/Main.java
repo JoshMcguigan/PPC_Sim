@@ -6,13 +6,15 @@ import org.jfree.data.xy.DefaultXYDataset;
 
 import javax.swing.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Main {
 
     /*
     Todo
-    Pack up all configuration values in preparation for GUI
+    Modify sun class constructors allow configuration variables to be passed in
+    Create inverter group class which contains array of inverters
     move current graphics into a class of its own
     Create step change set point
     Create sine wave sun
@@ -25,22 +27,33 @@ public class Main {
      */
 
 
-    private static final int invQuantity = 20;
-    private static final double maxIrr = 1500;
+    // SIMULATION CONFIGURATION PARAMETERS
+    private static final int invQuantity = 20; // quantity of inverters in simulation
+    private static final double maxIrr = 1500; // maximum irradiance put out by sun (W/m^2)
     private static final double simLength = 600; // simulation time in seconds
     private static final double simStepSize = .5; // simulation step size in seconds
-    private static final double controllerExecutionRate = 6; // Rate of controller execution, in seconds
+    private static final double controllerExecutionRate = 6; // Rate of power plant controller execution, in seconds
+    private static final double invMaxPower = 2.2; // maximum power per inverter (MW)
+    private static final double invMaxIrr = 1400; // irradiance required by inverters to output max power
+    private static final double invVariability = 0.5; // variability in inverter power when limited by set point (% of maximum power)
+    private static final double plantPowerSetPoint = 19; // plant power set point (MW)
+    private static final double substationDeadTime = 2.0; // time delay in substation power measurement (seconds)
+
+
     private static final int steps = (int)(simLength/simStepSize);
-    private static final double invMaxPower = 2.2;
     private static List<AbstractController> controllers;
+    private static Inverter[] inverter;
+    private static Substation substation;
 
 
     public static void main(String[] args) {
 
         System.out.println("Simulation starting");
 
-        // Instantiate simulation object
-        Simulator sim = new Simulator(invQuantity, invMaxPower, simLength, simStepSize, steps);
+        // Instantiate simulation objects
+        inverter = new Inverter[invQuantity];
+        Arrays.fill(inverter, new Inverter(invMaxPower, invMaxIrr, invVariability));
+        substation = new Substation(substationDeadTime);
 
         // Create list of controllers to test
         controllers = new ArrayList<AbstractController>(0);
@@ -56,7 +69,14 @@ public class Main {
         // Run simulation once per controller
         String[] controllerNames = new String[controllers.size()];
         for (int i = 0; i < controllers.size(); i++) {
-            simResults[i] = sim.simRun(new TriangleWaveSun(maxIrr, invQuantity), new ConstantSetPoint(19), controllers.get(i), steps);
+            simResults[i] = Simulator.simRun(new TriangleWaveSun(maxIrr, invQuantity),
+                    new ConstantSetPoint(plantPowerSetPoint),
+                    controllers.get(i),
+                    inverter,
+                    substation,
+                    simLength,
+                    simStepSize,
+                    steps);
             controllerNames[i] = controllers.get(i).getControllerName();
         }
 
