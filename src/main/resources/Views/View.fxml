@@ -14,19 +14,25 @@
 
     <Label text="Power Set Point (MW)"
         GridPane.columnIndex="0" GridPane.rowIndex="0"></Label>
-    <Slider GridPane.columnIndex="0" GridPane.rowIndex="1" fx:id="sliderPowerSetPoint"></Slider>
+    <Slider GridPane.columnIndex="0" GridPane.rowIndex="1"
+            fx:id="sliderPowerSetPoint"></Slider>
+
+    <Label text="Simulation Length (Minutes)"
+           GridPane.columnIndex="1" GridPane.rowIndex="0"></Label>
+    <Slider GridPane.columnIndex="1" GridPane.rowIndex="1"
+            fx:id="sliderSimLength"></Slider>
 
     <HBox spacing="10" alignment="bottom_right"
-          GridPane.columnIndex="1" GridPane.rowIndex="1">
+          GridPane.columnIndex="2" GridPane.rowIndex="1">
         <Button text="Run Sim"
                 onAction="#runSim"/>
     </HBox>
 
     <LineChart
             GridPane.columnIndex="0" GridPane.rowIndex="2"
-            GridPane.columnSpan="2"
+            GridPane.columnSpan="3"
             fx:id="chart">
-        <xAxis><NumberAxis label="Time (Seconds)" lowerBound="0" upperBound="600" tickUnit="1"/></xAxis>
+        <xAxis><NumberAxis label="Time (Minutes)" lowerBound="0" upperBound="600" tickUnit="1"/></xAxis>
         <yAxis><NumberAxis label="Plant Power Output (MW)" lowerBound="0" upperBound="40" tickUnit="1"/></yAxis>
     </LineChart>
 
