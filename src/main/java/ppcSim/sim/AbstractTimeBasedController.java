@@ -1,7 +1,5 @@
 package ppcSim.sim;
 
-import java.util.Arrays;
-
 /**
  * Created by Josh on 10/20/16.
  */
@@ -38,7 +36,9 @@ public abstract class AbstractTimeBasedController extends AbstractController {
 
     }
 
-
+    public static String getControllerName(){
+        return "Abstract Time Based Controller";
+    }
 
     public abstract double[] executeController(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp);
 

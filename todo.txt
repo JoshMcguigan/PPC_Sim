@@ -1,11 +1,14 @@
-Modify controller classes to start at set point of zero
+Modify controller classes to start at set point of zero?
+    or come up with some way to skip the first x minutes of simulation to allow "steady state"
+Modify sim package to be more self contained (more private)
+    create sim settings class which contains all settings for a complete simulation, with defaults set
+Add all simulation settings to GUI
 Modify sun class constructors allow configuration variables to be passed in
 Create inverter group class which contains array of inverters
-move current graphics into a class of its own
 Create step change set point
 Create sine wave sun
 Test ppcSim.sim.ComplexController for set point step changes with relatively constant irradiance
-Separate display logic from main logic, implement some analytics, possibly some interaction from GUI?
+Implement simulation analysis after sim runs
 Confirm set point outputs to each inverters varies over time, ensure set points equalize over time
 Implement ability to simulate inverters going offline (either just loss of comms but still producing or inverter turning completely off)
 Ability to interface with actual plant controller for testing and analysis

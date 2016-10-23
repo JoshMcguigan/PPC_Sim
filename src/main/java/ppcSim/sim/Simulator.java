@@ -1,5 +1,6 @@
 package ppcSim.sim;
 
+import java.util.Arrays;
 import java.util.stream.DoubleStream;
 
 /**
@@ -7,7 +8,35 @@ import java.util.stream.DoubleStream;
  */
 public abstract class Simulator {
 
-    public static PlantData[] simRun(AbstractSun sun, AbstractSetPoint setPoint, AbstractController controller, Inverter[] inverter, Substation substation, double simLength, double simStepSize, int steps){
+    public static PlantData[] simRun(SimulatorSettings simulatorSettings){
+
+        AbstractSun sun;
+        AbstractSetPoint setPoint;
+        AbstractController controller;
+        Inverter[] inverter = new Inverter[simulatorSettings.invQuantity];
+        Arrays.fill(inverter, new Inverter(simulatorSettings.invMaxPower, simulatorSettings.invMaxIrr, simulatorSettings.invVariability));
+        Substation substation = new Substation(simulatorSettings.substationDeadTime);
+
+        int steps = getStepQuantity(simulatorSettings);
+        double simStepSize = simulatorSettings.simStepSize;
+
+        try {
+            sun = simulatorSettings.sun.getConstructor(double.class, int.class).newInstance(simulatorSettings.maxIrr, simulatorSettings.invQuantity);
+            setPoint = new ConstantSetPoint(simulatorSettings.plantPowerSetPoint);
+        } catch(Exception e){
+            System.out.println(e);
+            return null;
+        }
+        try{
+            controller = simulatorSettings.controller.getConstructor(int.class, double.class).newInstance(simulatorSettings.invQuantity, simulatorSettings.invMaxPower);
+        } catch (Exception e){
+            try{
+                controller = simulatorSettings.controller.getConstructor(int.class, double.class, double.class).newInstance(simulatorSettings.invQuantity, simulatorSettings.invMaxPower, simulatorSettings.controllerExecutionRate);
+            } catch (Exception e2){
+                System.out.println(e2);
+                return null;
+            }
+        }
 
         PlantData[] plantData = new PlantData[steps];
         int invQuantity = inverter.length;
@@ -37,5 +66,9 @@ public abstract class Simulator {
 
         return new PlantData(plantPowerSetPoint, avgIrr, powerSetPoints, invPower, plantPower, timeStamp);
 
+    }
+
+    public static int getStepQuantity(SimulatorSettings simulatorSettings){
+        return (int)(simulatorSettings.simLength/simulatorSettings.simStepSize);
     }
 }

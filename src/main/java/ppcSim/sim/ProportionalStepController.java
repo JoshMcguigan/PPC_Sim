@@ -14,7 +14,7 @@ public class ProportionalStepController extends AbstractTimeBasedController {
 
     private double powerSetPoint = minPowerSetPoint + maxPowerSetPoint / 2; // in %, sent to every inverter
 
-    public ProportionalStepController(int invQuantity, double invPowerMax , double executionRate) {
+    public ProportionalStepController(int invQuantity, double invPowerMax, double executionRate) {
         super(invQuantity, invPowerMax, executionRate);
     }
 
@@ -43,7 +43,7 @@ public class ProportionalStepController extends AbstractTimeBasedController {
 
     }
 
-    public String getControllerName(){
+    public static String getControllerName(){
         return "Proportional Step Controller";
     }
 }

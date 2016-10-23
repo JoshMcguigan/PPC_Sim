@@ -6,6 +6,7 @@ import java.util.Arrays;
  * Created by Josh on 10/6/16.
  */
 public class NaiveController extends AbstractController {
+
     public NaiveController(int invQuantity, double invPowerMax) {
         super(invQuantity, invPowerMax);
     }
@@ -20,7 +21,7 @@ public class NaiveController extends AbstractController {
 
     }
 
-    public String getControllerName(){
+    public static String getControllerName(){
         return "Naive Controller";
     }
 }

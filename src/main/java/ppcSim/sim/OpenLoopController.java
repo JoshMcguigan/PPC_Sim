@@ -23,7 +23,7 @@ public class OpenLoopController extends AbstractController{
 
     }
 
-    public String getControllerName(){
+    public static String getControllerName(){
         return "Open Loop Controller";
     }
 }

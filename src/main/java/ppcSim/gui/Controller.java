@@ -18,25 +18,8 @@ import ppcSim.sim.*;
 
 public class Controller {
 
-    // Simulation variables
-    // SIMULATION CONFIGURATION PARAMETERS
-    private static final int invQuantity = 20; // quantity of inverters in simulation
-    private static final double maxIrr = 1500; // maximum irradiance put out by sun (W/m^2)
-    private static double simLength = 600; // simulation time in seconds
-    private static final double simStepSize = .5; // simulation step size in seconds
-    private static final double controllerExecutionRate = 6; // Rate of power plant controller execution, in seconds
-    private static final double invMaxPower = 2.2; // maximum power per inverter (MW)
-    private static final double invMaxIrr = 1400; // irradiance required by inverters to output max power
-    private static final double invVariability = 0.5; // variability in inverter power when limited by set point (% of maximum power)
-    private static double plantPowerSetPoint = 17.5; // plant power set point (MW)
-    private static final double substationDeadTime = 2.0; // time delay in substation power measurement (seconds)
-
-    private static final int secondsPerMinute = 60;
-
-    private static int steps;
-    private static List<AbstractController> controllers;
-    private static Inverter[] inverter;
-    private static Substation substation;
+    private SimulatorSettings simulatorSettings;
+    private final int secondsPerMinute = 60;
 
     @FXML private LineChart<Double, Double> chart;
     @FXML private Slider sliderPowerSetPoint;
@@ -44,6 +27,8 @@ public class Controller {
 
     @FXML
     protected void initialize() {
+
+        simulatorSettings = new SimulatorSettings();
 
         setupUIElements();
 
@@ -61,37 +46,29 @@ public class Controller {
 
         System.out.println("Simulation starting");
 
-        // Calculate number of steps in simulation
-        int steps = (int)(simLength/simStepSize);
-
-        // Instantiate simulation objects
-        inverter = new Inverter[invQuantity];
-        Arrays.fill(inverter, new Inverter(invMaxPower, invMaxIrr, invVariability));
-        substation = new Substation(substationDeadTime);
-
         // Create list of controllers to test
-        controllers = new ArrayList<AbstractController>(0);
-        controllers.add(new NaiveController(invQuantity, invMaxPower));
-        controllers.add(new OpenLoopController(invQuantity, invMaxPower));
-        controllers.add(new ProportionalStepController(invQuantity, invMaxPower, controllerExecutionRate));
-        controllers.add(new ComplexController(invQuantity, invMaxPower, controllerExecutionRate));
+        List<Class<? extends AbstractController>> controllers;
+        controllers = new ArrayList<Class<? extends AbstractController>>(0);
+        controllers.add(NaiveController.class);
+        controllers.add(OpenLoopController.class);
+        controllers.add(ProportionalStepController.class);
+        controllers.add(ComplexController.class);
 
         // Create 2d array to store results of simulation
         // [controller][step]
+        int steps = Simulator.getStepQuantity(simulatorSettings);
         PlantData[][] simResults = new PlantData[controllers.size()][steps];
 
         // Run simulation once per controller
         String[] controllerNames = new String[controllers.size()];
         for (int i = 0; i < controllers.size(); i++) {
-            simResults[i] = Simulator.simRun(new TriangleWaveSun(maxIrr, invQuantity),
-                    new ConstantSetPoint(plantPowerSetPoint),
-                    controllers.get(i),
-                    inverter,
-                    substation,
-                    simLength,
-                    simStepSize,
-                    steps);
-            controllerNames[i] = controllers.get(i).getControllerName();
+            simulatorSettings.controller = controllers.get(i);
+            simResults[i] = Simulator.simRun(simulatorSettings);
+            try {
+                controllerNames[i] = (String)controllers.get(i).getMethod("getControllerName").invoke(null, null);
+            } catch (Exception e){
+                return;
+            }
         }
 
         System.out.println("Simulation complete");
@@ -135,16 +112,16 @@ public class Controller {
 
     private void setupUIElements(){
         // Set up sliders
-        sliderPowerSetPoint.setValue(plantPowerSetPoint);
+        sliderPowerSetPoint.setValue(simulatorSettings.plantPowerSetPoint);
         sliderPowerSetPoint.setMin(0.0);
-        sliderPowerSetPoint.setMax(invQuantity * invMaxPower);
+        sliderPowerSetPoint.setMax(simulatorSettings.invQuantity * simulatorSettings.invMaxPower);
         sliderPowerSetPoint.setShowTickLabels(true);
         sliderPowerSetPoint.setShowTickMarks(true);
         sliderPowerSetPoint.setMajorTickUnit(10);
         sliderPowerSetPoint.setMinorTickCount(5);
         sliderPowerSetPoint.setBlockIncrement(1);
 
-        sliderSimLength.setValue(simLength/secondsPerMinute);
+        sliderSimLength.setValue(simulatorSettings.simLength/secondsPerMinute);
         sliderSimLength.setMin(0.0);
         sliderSimLength.setMax(60);
         sliderSimLength.setShowTickLabels(true);
@@ -159,7 +136,7 @@ public class Controller {
             public void changed(ObservableValue<? extends Number> observable,
                                 Number oldValue, Number newValue) {
 
-                plantPowerSetPoint = (double)newValue;
+                simulatorSettings.plantPowerSetPoint = (double)newValue;
             }
         });
         sliderSimLength.valueProperty().addListener(new ChangeListener<Number>() {
@@ -168,7 +145,7 @@ public class Controller {
                                 Number oldValue, Number newValue) {
 
                 // Allow sim length down to 1 minute only
-                simLength = Math.max((double)newValue, 1) * 60;
+                simulatorSettings.simLength = Math.max((double)newValue, 1) * 60;
             }
         });
     }
