@@ -5,7 +5,7 @@ package ppcSim.sim;
  */
 public class ComplexController extends AbstractTimeBasedController {
 
-    private double atSetPointDeadBand = 98; // ppcSim.sim.Inverter must produce at least this fraction of set point to be considered producing at set point, in %
+    private double atSetPointDeadBand = 98; // Inverter must produce at least this fraction of set point to be considered producing at set point, in %
     private double belowSetPointDeadBand = 96; // Inverters producing less than this fraction of set point are considered to be under-producing, in %
     private double deadBand = .2; // control dead band in MW
 

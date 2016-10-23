@@ -7,7 +7,7 @@ import java.util.Random;
  */
 public class Inverter {
 
-    private final double maxPower; // ppcSim.sim.Inverter Max Power Output in MW
+    private final double maxPower; // Inverter Max Power Output in MW
     private final double maxIrr; // Irradiance required to produce max power in W/m^2
     private final double variability; // Measure of maximum variability (two-sided) in power output when limited by set point, in units of percent of max power
     private final Random randomizer;

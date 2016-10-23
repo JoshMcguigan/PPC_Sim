@@ -23,8 +23,8 @@
             GridPane.columnIndex="0" GridPane.rowIndex="1"
             GridPane.columnSpan="2"
             fx:id="chart">
-        <xAxis><NumberAxis label="Values for X-Axis" lowerBound="0" upperBound="600" tickUnit="1"/></xAxis>
-        <yAxis><NumberAxis label="Values for Y-Axis" lowerBound="0" upperBound="40" tickUnit="1"/></yAxis>
+        <xAxis><NumberAxis label="Time (Seconds)" lowerBound="0" upperBound="600" tickUnit="1"/></xAxis>
+        <yAxis><NumberAxis label="Plant Power Output (MW)" lowerBound="0" upperBound="40" tickUnit="1"/></yAxis>
     </LineChart>
 
     <stylesheets>

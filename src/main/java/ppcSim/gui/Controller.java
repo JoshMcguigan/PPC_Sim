@@ -40,8 +40,8 @@ public class Controller {
     @FXML
     protected void initialize() {
 
-        //runSim();
-        return;
+        runSim();
+
     }
 
 
@@ -117,7 +117,7 @@ public class Controller {
             lineChartData.add(plantOutput);
         }
 
-
+        chart.setCreateSymbols(false);
         chart.setData(lineChartData);
         chart.createSymbolsProperty();
     }
