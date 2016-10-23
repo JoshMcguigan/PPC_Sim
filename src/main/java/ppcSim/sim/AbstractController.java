@@ -25,7 +25,7 @@ public abstract class AbstractController {
         plantPowerMax = invQuantity * invPowerMax;
 
         powerSetPoints = new double[invQuantity];
-        Arrays.fill(powerSetPoints, maxPowerSetPoint);
+        Arrays.fill(powerSetPoints, minPowerSetPoint + maxPowerSetPoint / 2);
     }
 
     public abstract double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp);

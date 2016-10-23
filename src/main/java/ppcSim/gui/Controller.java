@@ -1,11 +1,14 @@
 package ppcSim.gui;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Slider;
 import javafx.scene.text.Text;
 
 import java.util.ArrayList;
@@ -26,7 +29,7 @@ public class Controller {
     private static final double invMaxPower = 2.2; // maximum power per inverter (MW)
     private static final double invMaxIrr = 1400; // irradiance required by inverters to output max power
     private static final double invVariability = 0.5; // variability in inverter power when limited by set point (% of maximum power)
-    private static final double plantPowerSetPoint = 19; // plant power set point (MW)
+    private static double plantPowerSetPoint = 20; // plant power set point (MW)
     private static final double substationDeadTime = 2.0; // time delay in substation power measurement (seconds)
 
 
@@ -36,9 +39,29 @@ public class Controller {
     private static Substation substation;
 
     @FXML private LineChart<Double, Double> chart;
+    @FXML private Slider sliderPowerSetPoint;
 
     @FXML
     protected void initialize() {
+
+        sliderPowerSetPoint.setValue(plantPowerSetPoint);
+        sliderPowerSetPoint.setMin(0.0);
+        sliderPowerSetPoint.setMax(40.0);
+        sliderPowerSetPoint.setShowTickLabels(true);
+        sliderPowerSetPoint.setShowTickMarks(true);
+        sliderPowerSetPoint.setMajorTickUnit(10);
+        sliderPowerSetPoint.setMinorTickCount(5);
+        sliderPowerSetPoint.setBlockIncrement(1);
+
+        // Listen for Slider value changes
+        sliderPowerSetPoint.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable,
+                                Number oldValue, Number newValue) {
+
+                plantPowerSetPoint = (double)newValue;
+            }
+        });
 
         runSim();
 

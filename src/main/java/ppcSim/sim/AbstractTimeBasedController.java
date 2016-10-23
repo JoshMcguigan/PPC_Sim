@@ -22,8 +22,6 @@ public abstract class AbstractTimeBasedController extends AbstractController {
         maxStepSizePerExecution = ( maxStepSize / 60 ) * executionRate;
         lastExecutionTime = 0;
 
-        // Initialize power controller to set point
-        Arrays.fill(powerSetPoints, 50);
     }
 
     public double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){

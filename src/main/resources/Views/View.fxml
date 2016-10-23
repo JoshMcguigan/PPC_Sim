@@ -12,15 +12,18 @@
           xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
     <padding><Insets top="25" right="25" bottom="10" left="25"/></padding>
 
+    <Label text="Power Set Point (MW)"
+        GridPane.columnIndex="0" GridPane.rowIndex="0"></Label>
+    <Slider GridPane.columnIndex="0" GridPane.rowIndex="1" fx:id="sliderPowerSetPoint"></Slider>
 
     <HBox spacing="10" alignment="bottom_right"
-          GridPane.columnIndex="1" GridPane.rowIndex="0">
+          GridPane.columnIndex="1" GridPane.rowIndex="1">
         <Button text="Run Sim"
                 onAction="#runSim"/>
     </HBox>
 
     <LineChart
-            GridPane.columnIndex="0" GridPane.rowIndex="1"
+            GridPane.columnIndex="0" GridPane.rowIndex="2"
             GridPane.columnSpan="2"
             fx:id="chart">
         <xAxis><NumberAxis label="Time (Seconds)" lowerBound="0" upperBound="600" tickUnit="1"/></xAxis>
