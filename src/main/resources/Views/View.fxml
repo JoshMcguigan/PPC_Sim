@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<GridPane fx:controller="ppcSim.gui.Controller"
+          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+    <padding><Insets top="25" right="25" bottom="10" left="25"/></padding>
+
+
+    <HBox spacing="10" alignment="bottom_right"
+          GridPane.columnIndex="1" GridPane.rowIndex="0">
+        <Button text="Run Sim"
+                onAction="#runSim"/>
+    </HBox>
+
+    <LineChart
+            GridPane.columnIndex="0" GridPane.rowIndex="1"
+            GridPane.columnSpan="2"
+            fx:id="chart">
+        <xAxis><NumberAxis label="Values for X-Axis" lowerBound="0" upperBound="600" tickUnit="1"/></xAxis>
+        <yAxis><NumberAxis label="Values for Y-Axis" lowerBound="0" upperBound="40" tickUnit="1"/></yAxis>
+    </LineChart>
+
+    <stylesheets>
+        <URL value="@../CSS/PPC_Sim.css" />
+    </stylesheets>
+
+</GridPane>

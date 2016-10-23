@@ -1,10 +1,12 @@
+package ppcSim.sim;
+
 import java.util.Arrays;
 
 /**
  * Created by Josh on 10/6/16.
  */
 public class NaiveController extends AbstractController {
-    NaiveController(int invQuantity, double invPowerMax) {
+    public NaiveController(int invQuantity, double invPowerMax) {
         super(invQuantity, invPowerMax);
     }
 

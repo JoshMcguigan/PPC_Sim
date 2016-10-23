@@ -1,4 +1,5 @@
-import java.util.Arrays;
+package ppcSim.sim;
+
 import java.util.stream.DoubleStream;
 
 /**

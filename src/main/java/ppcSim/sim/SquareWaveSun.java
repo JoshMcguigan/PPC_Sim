@@ -1,3 +1,5 @@
+package ppcSim.sim;
+
 import java.util.stream.DoubleStream;
 
 /**
@@ -16,7 +18,7 @@ public class SquareWaveSun extends AbstractSun{
     private boolean irrHigh; // Bit to track whether irradiance is at high or low level
     private int cloudiness = 300;
 
-    SquareWaveSun(double maxIrr, int invQuantity){
+    public SquareWaveSun(double maxIrr, int invQuantity){
 
         super(maxIrr, invQuantity);
 

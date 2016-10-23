@@ -1,3 +1,5 @@
+package ppcSim.sim;
+
 import java.util.stream.DoubleStream;
 
 /**
@@ -14,7 +16,7 @@ public class TriangleWaveSun extends AbstractSun{
     private double irrNoiseLevel = .01; // measure of how different the irradiance level to each inverter is
     private double cloudiness = 300; // measure of cloudiness
 
-    TriangleWaveSun(double maxIrr, int invQuantity){
+    public TriangleWaveSun(double maxIrr, int invQuantity){
 
         super(maxIrr, invQuantity);
 

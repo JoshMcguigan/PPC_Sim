@@ -1,3 +1,5 @@
+package ppcSim.sim;
+
 import java.util.Arrays;
 
 /**
@@ -12,7 +14,7 @@ public class ProportionalStepController extends AbstractTimeBasedController {
 
     private double powerSetPoint = 50; // in %, sent to every inverter
 
-    ProportionalStepController(int invQuantity, double invPowerMax , double executionRate) {
+    public ProportionalStepController(int invQuantity, double invPowerMax , double executionRate) {
         super(invQuantity, invPowerMax, executionRate);
     }
 

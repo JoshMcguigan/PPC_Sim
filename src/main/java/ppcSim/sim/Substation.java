@@ -1,4 +1,4 @@
-/**
+package ppcSim.sim; /**
  * Created by Josh on 10/5/16.
  */
 
@@ -13,7 +13,7 @@ public class Substation {
     private Map<Double,Double> dataStore; // Stores <timeStamp, calculated plant power>
     private double lastReportedPower; // Stores the last reported power value
 
-    Substation(double deadTime){
+    public Substation(double deadTime){
         this.deadTime = deadTime;
         dataStore = new HashMap<Double,Double>();
         lastReportedPower = 0;

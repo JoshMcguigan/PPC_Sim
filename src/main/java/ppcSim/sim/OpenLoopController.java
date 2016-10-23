@@ -1,3 +1,5 @@
+package ppcSim.sim;
+
 import java.util.Arrays;
 
 /**
@@ -5,7 +7,7 @@ import java.util.Arrays;
  */
 public class OpenLoopController extends AbstractController{
 
-    OpenLoopController(int invQuantity, double invPowerMax) {
+    public OpenLoopController(int invQuantity, double invPowerMax) {
         super(invQuantity, invPowerMax);
     }
 
