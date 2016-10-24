@@ -3,9 +3,6 @@ package ppcSim.sim;
 import java.util.Arrays;
 import java.util.stream.DoubleStream;
 
-/**
- * Created by Josh on 10/5/16.
- */
 public abstract class Simulator {
 
     public static PlantData[] simRun(SimulatorSettings simulatorSettings){
@@ -20,23 +17,9 @@ public abstract class Simulator {
         int steps = getStepQuantity(simulatorSettings);
         double simStepSize = simulatorSettings.simStepSize;
 
-        try {
-            sun = simulatorSettings.sun.getConstructor(double.class, int.class).newInstance(simulatorSettings.maxIrr, simulatorSettings.invQuantity);
-            setPoint = new ConstantSetPoint(simulatorSettings.plantPowerSetPoint);
-        } catch(Exception e){
-            System.out.println(e);
-            return null;
-        }
-        try{
-            controller = simulatorSettings.controller.getConstructor(int.class, double.class).newInstance(simulatorSettings.invQuantity, simulatorSettings.invMaxPower);
-        } catch (Exception e){
-            try{
-                controller = simulatorSettings.controller.getConstructor(int.class, double.class, double.class).newInstance(simulatorSettings.invQuantity, simulatorSettings.invMaxPower, simulatorSettings.controllerExecutionRate);
-            } catch (Exception e2){
-                System.out.println(e2);
-                return null;
-            }
-        }
+        sun = simulatorSettings.sun.get(simulatorSettings);
+        setPoint = new ConstantSetPoint(simulatorSettings.plantPowerSetPoint);
+        controller = simulatorSettings.controller.get(simulatorSettings);
 
         PlantData[] plantData = new PlantData[steps];
         int invQuantity = inverter.length;

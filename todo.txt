@@ -1,11 +1,9 @@
 Modify controller classes to start at set point of zero?
     or come up with some way to skip the first x minutes of simulation to allow "steady state"
-Modify sim package to be more self contained (more private)
-    create sim settings class which contains all settings for a complete simulation, with defaults set
 Add all simulation settings to GUI
 Modify sun class constructors allow configuration variables to be passed in
 Create inverter group class which contains array of inverters
-Create step change set point
+Create step change set point, and set point factory
 Create sine wave sun
 Test ppcSim.sim.ComplexController for set point step changes with relatively constant irradiance
 Implement simulation analysis after sim runs
@@ -13,3 +11,5 @@ Confirm set point outputs to each inverters varies over time, ensure set points 
 Implement ability to simulate inverters going offline (either just loss of comms but still producing or inverter turning completely off)
 Ability to interface with actual plant controller for testing and analysis
 Ability to use real irradiance values from an import file
+Repackage plant data to include array of plant data snapshots, plus controller type, sun type, set point type, etc
+Review access levels for simulation classes

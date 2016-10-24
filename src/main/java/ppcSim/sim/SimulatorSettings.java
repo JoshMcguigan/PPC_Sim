@@ -1,17 +1,10 @@
 package ppcSim.sim;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-/**
- * Created by Josh on 10/23/16.
- */
 public class SimulatorSettings {
 
     // default simulation parameters
-    public Class<? extends AbstractSun> sun = TriangleWaveSun.class;
-    public Class<? extends AbstractController> controller = NaiveController.class;
+    public SunFactory sun = SunFactory.TRIANGLEWAVE;
+    public ControllerFactory controller = ControllerFactory.NAIVE;
     public int invQuantity = 20; // quantity of inverters in simulation
     public double maxIrr = 1500; // maximum irradiance put out by sun (W/m^2)
     public double simLength = 600; // simulation time in seconds
@@ -25,9 +18,6 @@ public class SimulatorSettings {
 
 
     public SimulatorSettings(){
-
-
-
 
     }
 

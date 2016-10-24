@@ -10,9 +10,6 @@ import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.Slider;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import ppcSim.sim.*;
 
 
@@ -29,9 +26,7 @@ public class Controller {
     protected void initialize() {
 
         simulatorSettings = new SimulatorSettings();
-
         setupUIElements();
-
         runSim();
 
     }
@@ -46,29 +41,18 @@ public class Controller {
 
         System.out.println("Simulation starting");
 
-        // Create list of controllers to test
-        List<Class<? extends AbstractController>> controllers;
-        controllers = new ArrayList<Class<? extends AbstractController>>(0);
-        controllers.add(NaiveController.class);
-        controllers.add(OpenLoopController.class);
-        controllers.add(ProportionalStepController.class);
-        controllers.add(ComplexController.class);
-
         // Create 2d array to store results of simulation
         // [controller][step]
         int steps = Simulator.getStepQuantity(simulatorSettings);
-        PlantData[][] simResults = new PlantData[controllers.size()][steps];
+        int controllerQuantity = ControllerFactory.values().length;
+        PlantData[][] simResults = new PlantData[controllerQuantity][steps];
 
         // Run simulation once per controller
-        String[] controllerNames = new String[controllers.size()];
-        for (int i = 0; i < controllers.size(); i++) {
-            simulatorSettings.controller = controllers.get(i);
+        String[] controllerNames = new String[controllerQuantity];
+        for (int i = 0; i < controllerQuantity; i++) {
+            simulatorSettings.controller = ControllerFactory.values()[i];
             simResults[i] = Simulator.simRun(simulatorSettings);
-            try {
-                controllerNames[i] = (String)controllers.get(i).getMethod("getControllerName").invoke(null, null);
-            } catch (Exception e){
-                return;
-            }
+            controllerNames[i] = simulatorSettings.controller.toString();
         }
 
         System.out.println("Simulation complete");
@@ -78,17 +62,8 @@ public class Controller {
     }
 
     private void updateChart (PlantData[][] plantData, String[] controllerNames){
-        ObservableList<XYChart.Series<Double, Double>> lineChartData = FXCollections.observableArrayList();
 
-        // Create set point data set
-        LineChart.Series<Double, Double> setPoint = new LineChart.Series<Double, Double>();
-        setPoint.setName("Set Point");
-        for (int i = 0; i < plantData[0].length; i++) {
-            Double x = plantData[0][i].timeStamp / secondsPerMinute;
-            Double y = plantData[0][i].plantSetPoint;
-            setPoint.getData().add(new XYChart.Data<Double,Double>(x,y));
-        }
-        lineChartData.add(setPoint);
+        ObservableList<XYChart.Series<Double, Double>> lineChartData = FXCollections.observableArrayList();
 
         // Create plant output data sets
         for (int controller = 0; controller < plantData.length; controller++) {
@@ -104,6 +79,17 @@ public class Controller {
 
             lineChartData.add(plantOutput);
         }
+
+        // Create set point data set
+        LineChart.Series<Double, Double> setPoint = new LineChart.Series<Double, Double>();
+        setPoint.setName("Set Point");
+        for (int i = 0; i < plantData[0].length; i++) {
+            Double x = plantData[0][i].timeStamp / secondsPerMinute;
+            Double y = plantData[0][i].plantSetPoint;
+            setPoint.getData().add(new XYChart.Data<Double,Double>(x,y));
+        }
+        lineChartData.add(setPoint);
+
 
         chart.setCreateSymbols(false);
         chart.setData(lineChartData);
