@@ -16,7 +16,7 @@ public enum SunFactory {
         switch(this){
             case TRIANGLEWAVE: return new TriangleWaveSun(simulatorSettings.maxIrr, simulatorSettings.invQuantity);
             case SQUAREWAVE: return new SquareWaveSun(simulatorSettings.maxIrr, simulatorSettings.invQuantity);
-            default: return null;
+            default: throw new UnsupportedOperationException();
         }
     }
 

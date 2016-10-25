@@ -20,7 +20,7 @@ public enum ControllerFactory {
             case OPENLOOP: return new OpenLoopController(simulatorSettings.invQuantity, simulatorSettings.invMaxPower);
             case PROPORTIONALSTEP: return new ProportionalStepController(simulatorSettings.invQuantity, simulatorSettings.invMaxPower, simulatorSettings.controllerExecutionRate);
             case COMPLEX: return new ComplexController(simulatorSettings.invQuantity, simulatorSettings.invMaxPower, simulatorSettings.controllerExecutionRate);
-            default: return null;
+            default: throw new UnsupportedOperationException();
         }
     }
 
