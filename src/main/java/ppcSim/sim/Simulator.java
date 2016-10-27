@@ -27,9 +27,10 @@ public class Simulator {
 
     public Simulator(){
         settings = new SimulatorSettings();
-        sun = settings.sun.get(settings);
+        sun = new TriangleWaveSun(settings.maxIrr, settings.invQuantity);
         setPoint = new ConstantSetPoint(settings.plantPowerSetPoint);
-        controller = settings.controller.get(settings);
+        controller = new ComplexController(settings.invQuantity, settings.invMaxPower,
+                settings.controllerExecutionRate);
         substation = new Substation(settings.substationDeadTime);
         inverters = Inverter.getArray(settings.invMaxPower, settings.invMaxIrr,
                 settings.invVariability, settings.invQuantity);

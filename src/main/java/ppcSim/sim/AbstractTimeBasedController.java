@@ -36,10 +36,6 @@ public abstract class AbstractTimeBasedController extends AbstractController {
 
     }
 
-    public static String getControllerName(){
-        return "Abstract Time Based Controller";
-    }
-
     public abstract double[] executeController(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp);
 
 }

@@ -12,6 +12,9 @@ import javafx.scene.control.Slider;
 
 import ppcSim.sim.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class Controller {
 
@@ -48,21 +51,30 @@ public class Controller {
 
         System.out.println("Simulation starting");
 
+        // Create a list of controllers
+        List<AbstractController> controllers = new ArrayList<>();
+        controllers.add(new NaiveController(simulatorSettings.invQuantity, simulatorSettings.invMaxPower));
+        controllers.add(new OpenLoopController(simulatorSettings.invQuantity, simulatorSettings.invMaxPower));
+        controllers.add(new ProportionalStepController(simulatorSettings.invQuantity,
+                simulatorSettings.invMaxPower, simulatorSettings.controllerExecutionRate));
+        controllers.add(new ComplexController(simulatorSettings.invQuantity,
+                simulatorSettings.invMaxPower, simulatorSettings.controllerExecutionRate));
+
+
         // Create 2d array to store results of simulation
         // [controller][step]
         int steps = Simulator.getStepQuantity(simulatorSettings);
-        int controllerQuantity = ControllerFactory.values().length;
+        int controllerQuantity = controllers.size();
         PlantData[][] simResults = new PlantData[controllerQuantity][steps];
 
         // Run simulation once per controller
         String[] controllerNames = new String[controllerQuantity];
         for (int i = 0; i < controllerQuantity; i++) {
             resetSimInstances();
-            simulatorSettings.controller = ControllerFactory.values()[i];
-            controller = ControllerFactory.values()[i].get(simulatorSettings);
+            controller = controllers.get(i);
             simulator = new Simulator(simulatorSettings, sun, setPoint, controller, substation, inverters);
             simResults[i] = simulator.run();
-            controllerNames[i] = simulator.settings.controller.toString();
+            controllerNames[i] = controller.getControllerName();
         }
 
         System.out.println("Simulation complete");

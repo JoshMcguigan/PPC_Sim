@@ -105,7 +105,7 @@ public class ComplexController extends AbstractTimeBasedController {
 
     }
 
-    public static String getControllerName(){
+    public String getControllerName(){
         return "Complex Controller";
     }
 }

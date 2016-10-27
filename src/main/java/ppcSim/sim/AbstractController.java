@@ -2,11 +2,6 @@ package ppcSim.sim;
 
 import java.util.Arrays;
 
-/**
- * Created by Josh on 10/5/16.
- */
-
-
 public abstract class AbstractController {
 
     protected final int invQuantity;
@@ -16,7 +11,7 @@ public abstract class AbstractController {
     protected double maxPowerSetPoint = 100;
     protected double minPowerSetPoint = 10;
 
-    AbstractController(int invQuantity, double invPowerMax){
+    protected AbstractController(int invQuantity, double invPowerMax){
         this.invQuantity = invQuantity;
 
         // This could be passed as an array to account for different inverter sizes
@@ -30,7 +25,5 @@ public abstract class AbstractController {
 
     public abstract double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp);
 
-    public static String getControllerName(){
-        return "Abstract Controller";
-    }
+    public abstract String getControllerName();
 }

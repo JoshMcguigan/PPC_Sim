@@ -3,8 +3,6 @@ package ppcSim.sim;
 public class SimulatorSettings {
 
     // default simulation parameters
-    public SunFactory sun = SunFactory.TRIANGLEWAVE;
-    public ControllerFactory controller = ControllerFactory.NAIVE;
     public int invQuantity = 20; // quantity of inverters in simulation
     public double maxIrr = 1500; // maximum irradiance put out by sun (W/m^2)
     public double simLength = 600; // simulation time in seconds

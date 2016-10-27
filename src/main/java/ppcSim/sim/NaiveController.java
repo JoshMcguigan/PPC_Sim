@@ -2,9 +2,7 @@ package ppcSim.sim;
 
 import java.util.Arrays;
 
-/**
- * Created by Josh on 10/6/16.
- */
+
 public class NaiveController extends AbstractController {
 
     public NaiveController(int invQuantity, double invPowerMax) {
@@ -21,7 +19,7 @@ public class NaiveController extends AbstractController {
 
     }
 
-    public static String getControllerName(){
+    public String getControllerName(){
         return "Naive Controller";
     }
 }

@@ -43,7 +43,7 @@ public class ProportionalStepController extends AbstractTimeBasedController {
 
     }
 
-    public static String getControllerName(){
+    public String getControllerName(){
         return "Proportional Step Controller";
     }
 }
