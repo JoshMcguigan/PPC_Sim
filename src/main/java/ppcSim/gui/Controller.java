@@ -15,7 +15,14 @@ import ppcSim.sim.*;
 
 public class Controller {
 
+    private Simulator simulator;
     private SimulatorSettings simulatorSettings;
+    private AbstractSun sun;
+    private AbstractSetPoint setPoint;
+    private AbstractController controller;
+    private Substation substation;
+    private Inverter[] inverters;
+
     private final int secondsPerMinute = 60;
 
     @FXML private LineChart<Double, Double> chart;
@@ -50,15 +57,26 @@ public class Controller {
         // Run simulation once per controller
         String[] controllerNames = new String[controllerQuantity];
         for (int i = 0; i < controllerQuantity; i++) {
+            resetSimInstances();
             simulatorSettings.controller = ControllerFactory.values()[i];
-            simResults[i] = Simulator.simRun(simulatorSettings);
-            controllerNames[i] = simulatorSettings.controller.toString();
+            controller = ControllerFactory.values()[i].get(simulatorSettings);
+            simulator = new Simulator(simulatorSettings, sun, setPoint, controller, substation, inverters);
+            simResults[i] = simulator.run();
+            controllerNames[i] = simulator.settings.controller.toString();
         }
 
         System.out.println("Simulation complete");
 
         updateChart(simResults, controllerNames);
 
+    }
+
+    private void resetSimInstances(){
+        sun = new TriangleWaveSun(simulatorSettings.maxIrr, simulatorSettings.invQuantity);
+        setPoint = new ConstantSetPoint(simulatorSettings.plantPowerSetPoint);
+        substation = new Substation(simulatorSettings.substationDeadTime);
+        inverters = Inverter.getArray(simulatorSettings.invMaxPower, simulatorSettings.invMaxIrr,
+                simulatorSettings.invVariability, simulatorSettings.invQuantity);
     }
 
     private void updateChart (PlantData[][] plantData, String[] controllerNames){

@@ -1,8 +1,5 @@
 package ppcSim.sim;
 
-/**
- * Created by Josh on 10/20/16.
- */
 public class AbstractSimulationObject {
     protected double lastSimTime; // Stores the timestamp of the last simulation execution
 
@@ -10,9 +7,9 @@ public class AbstractSimulationObject {
         lastSimTime = 0;
     }
 
-    protected double updateTimeStamp(double timeStamp){
-        double timeDelta = timeStamp - lastSimTime;
-        lastSimTime = timeStamp;
+    protected double getTimeDeltaAndUpdateTimeStamp(double currentTimeStamp){
+        double timeDelta = currentTimeStamp - lastSimTime;
+        lastSimTime = currentTimeStamp;
         return timeDelta;
     }
 }

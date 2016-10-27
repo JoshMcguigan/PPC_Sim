@@ -32,7 +32,7 @@ public class TriangleWaveSun extends AbstractSun{
     @Override
     public double[] getIrradiance(double timeStamp){
 
-        double timeDelta = updateTimeStamp(timeStamp);
+        double timeDelta = getTimeDeltaAndUpdateTimeStamp(timeStamp);
 
         // Change irradiance baseline by step size
         irradiance += changeRate * timeDelta;

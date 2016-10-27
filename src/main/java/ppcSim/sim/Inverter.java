@@ -1,10 +1,8 @@
 package ppcSim.sim;
 
+import java.util.Arrays;
 import java.util.Random;
 
-/**
- * Created by Josh on 10/5/16.
- */
 public class Inverter {
 
     private final double maxPower; // Inverter Max Power Output in MW
@@ -20,6 +18,13 @@ public class Inverter {
 
         randomizer = new Random();
 
+    }
+
+    public static Inverter[] getArray(double maxPower, double maxIrr, double variability, int inverterQuantity){
+        Inverter[] inverterArray = new Inverter[inverterQuantity];
+        Arrays.fill(inverterArray, new Inverter(maxPower, maxIrr, variability));
+
+        return inverterArray;
     }
 
     public double getPower(double powerSetPoint, double irr){
