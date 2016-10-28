@@ -1,6 +1,4 @@
-package ppcSim.sim; /**
- * Created by Josh on 10/5/16.
- */
+package ppcSim.sim;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -9,17 +7,15 @@ import java.util.stream.*;
 
 public class Substation {
 
-    private SubstationSettings substationSettings;
+    private SubstationSettings settings;
 
     private Map<Double,Double> dataStore; // Stores <timeStamp, calculated plant power>
-    private double lastReportedPower; // Stores the last reported power value
 
-    public Substation(SubstationSettings substationSettings){
+    public Substation(SubstationSettings settings){
 
-        this.substationSettings = substationSettings;
+        this.settings = settings;
 
         dataStore = new HashMap<Double,Double>();
-        lastReportedPower = 0;
     }
 
     public double getPlantPower(double[] invPower, double timeStamp){
@@ -31,7 +27,7 @@ public class Substation {
         Double selectedTime = 0.0;
         Double sitePower = 0.0;
         for (Double key: dataStore.keySet() ){
-            if ( timeStamp-substationSettings.deadTime >= key){
+            if ( timeStamp - settings.deadTime >= key){
                 // Choose the latest time stamp which is before the deadTime
                 if (key >= selectedTime ) {
                     selectedTime = key;

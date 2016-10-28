@@ -5,24 +5,21 @@ import java.util.Random;
 
 public class Inverter {
 
-    private final double maxPower; // Inverter Max Power Output in MW
-    private final double maxIrr; // Irradiance required to produce max power in W/m^2
-    private final double variability; // Measure of maximum variability (two-sided) in power output when limited by set point, in units of percent of max power
+    private InverterSettings settings;
+
     private final Random randomizer;
 
-    public Inverter(double maxPower, double maxIrr, double variability){
+    public Inverter(InverterSettings settings){
 
-        this.maxPower = maxPower;
-        this.maxIrr = maxIrr;
-        this.variability = variability;
+        this.settings = settings;
 
         randomizer = new Random();
 
     }
 
-    public static Inverter[] getArray(double maxPower, double maxIrr, double variability, int inverterQuantity){
+    public static Inverter[] getArray(InverterSettings settings, int inverterQuantity){
         Inverter[] inverterArray = new Inverter[inverterQuantity];
-        Arrays.fill(inverterArray, new Inverter(maxPower, maxIrr, variability));
+        Arrays.fill(inverterArray, new Inverter(settings));
 
         return inverterArray;
     }
@@ -38,14 +35,14 @@ public class Inverter {
         }
 
         // Calculate set point power limit in MW
-        double powerSetPointLimit = maxPower * powerSetPoint / 100;
+        double powerSetPointLimit = settings.maxPower * powerSetPoint / 100;
 
         // Calculate irradiance power limit in MW
-        double irrPowerLimit = ( Math.min(maxIrr, irr) / maxIrr ) * maxPower;
+        double irrPowerLimit = ( Math.min(settings.irrRequiredForMaxPower, irr) / settings.irrRequiredForMaxPower ) * settings.maxPower;
 
         // Introduce some variability, so if an inverter is limited
         // by the power set point, it doesn't make exactly the set point power
-        double realisticPowerSetPointLimit = powerSetPointLimit + ( randomizer.nextDouble() - 0.5 ) * variability * 0.01 * maxPower;
+        double realisticPowerSetPointLimit = powerSetPointLimit + ( randomizer.nextDouble() - 0.5 ) * settings.variability * 0.01 * settings.maxPower;
 
         return Math.min(irrPowerLimit, realisticPowerSetPointLimit);
 

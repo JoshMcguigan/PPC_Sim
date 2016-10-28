@@ -5,7 +5,6 @@ import java.util.stream.DoubleStream;
 public class Simulator {
 
     public SimulatorSettings simulatorSettings;
-    public SubstationSettings substationSettings;
 
     public AbstractSun sun;
     public AbstractSetPoint setPoint;
@@ -16,26 +15,17 @@ public class Simulator {
     double[] powerSetPoints;
     double[] invPower;
 
-    public Simulator(SimulatorSettings simulatorSettings, SubstationSettings substationSettings, AbstractSun sun, AbstractSetPoint setPoint,
+    public Simulator(SimulatorSettings simulatorSettings, Substation substation, AbstractSun sun, AbstractSetPoint setPoint,
                      AbstractController controller, Inverter[] inverters){
+
         this.simulatorSettings = simulatorSettings;
-        this.substationSettings = substationSettings;
+
+        this.substation = substation;
         this.sun = sun;
         this.setPoint = setPoint;
         this.controller = controller;
-        this.substation = new Substation(substationSettings);
         this.inverters = inverters;
-    }
 
-    public Simulator(){
-        simulatorSettings = new SimulatorSettings();
-        sun = new TriangleWaveSun(simulatorSettings.maxIrr, simulatorSettings.invQuantity);
-        setPoint = new ConstantSetPoint(simulatorSettings.plantPowerSetPoint);
-        controller = new ComplexController(simulatorSettings.invQuantity, simulatorSettings.invMaxPower,
-                simulatorSettings.controllerExecutionRate);
-        substation = new Substation(substationSettings);
-        inverters = Inverter.getArray(simulatorSettings.invMaxPower, simulatorSettings.invMaxIrr,
-                simulatorSettings.invVariability, simulatorSettings.invQuantity);
     }
 
     public PlantData[] run(){

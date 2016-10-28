@@ -20,6 +20,7 @@ public class Controller {
 
     private SimulatorSettings simulatorSettings;
     private SubstationSettings substationSettings;
+    private InverterSettings inverterSettings;
 
     private Simulator simulator;
     private AbstractSun sun;
@@ -39,6 +40,7 @@ public class Controller {
 
         simulatorSettings = new SimulatorSettings();
         substationSettings = new SubstationSettings();
+        inverterSettings = new InverterSettings();
 
         setupUIElements();
         runSim();
@@ -57,12 +59,12 @@ public class Controller {
 
         // Create a list of controllers
         List<AbstractController> controllers = new ArrayList<>();
-        controllers.add(new NaiveController(simulatorSettings.invQuantity, simulatorSettings.invMaxPower));
-        controllers.add(new OpenLoopController(simulatorSettings.invQuantity, simulatorSettings.invMaxPower));
+        controllers.add(new NaiveController(simulatorSettings.invQuantity, inverterSettings.maxPower));
+        controllers.add(new OpenLoopController(simulatorSettings.invQuantity, inverterSettings.maxPower));
         controllers.add(new ProportionalStepController(simulatorSettings.invQuantity,
-                simulatorSettings.invMaxPower, simulatorSettings.controllerExecutionRate));
+                inverterSettings.maxPower, simulatorSettings.controllerExecutionRate));
         controllers.add(new ComplexController(simulatorSettings.invQuantity,
-                simulatorSettings.invMaxPower, simulatorSettings.controllerExecutionRate));
+                inverterSettings.maxPower, simulatorSettings.controllerExecutionRate));
 
 
         // Create 2d array to store results of simulation
@@ -76,7 +78,7 @@ public class Controller {
         for (int i = 0; i < controllerQuantity; i++) {
             resetSimInstances();
             controller = controllers.get(i);
-            simulator = new Simulator(simulatorSettings, substationSettings, sun, setPoint, controller, inverters);
+            simulator = new Simulator(simulatorSettings, substation, sun, setPoint, controller, inverters);
             simResults[i] = simulator.run();
             controllerNames[i] = controller.getControllerName();
         }
@@ -91,8 +93,7 @@ public class Controller {
         sun = new TriangleWaveSun(simulatorSettings.maxIrr, simulatorSettings.invQuantity);
         setPoint = new ConstantSetPoint(simulatorSettings.plantPowerSetPoint);
         substation = new Substation(substationSettings);
-        inverters = Inverter.getArray(simulatorSettings.invMaxPower, simulatorSettings.invMaxIrr,
-                simulatorSettings.invVariability, simulatorSettings.invQuantity);
+        inverters = Inverter.getArray(inverterSettings, simulatorSettings.invQuantity);
     }
 
     private void updateChart (PlantData[][] plantData, String[] controllerNames){
@@ -134,7 +135,7 @@ public class Controller {
         // Set up sliders
         sliderPowerSetPoint.setValue(simulatorSettings.plantPowerSetPoint);
         sliderPowerSetPoint.setMin(0.0);
-        sliderPowerSetPoint.setMax(simulatorSettings.invQuantity * simulatorSettings.invMaxPower);
+        sliderPowerSetPoint.setMax(simulatorSettings.invQuantity * inverterSettings.maxPower);
         sliderPowerSetPoint.setShowTickLabels(true);
         sliderPowerSetPoint.setShowTickMarks(true);
         sliderPowerSetPoint.setMajorTickUnit(10);
