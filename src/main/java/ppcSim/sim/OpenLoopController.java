@@ -7,7 +7,7 @@ import java.util.Arrays;
  */
 public class OpenLoopController extends AbstractController{
 
-    public OpenLoopController(int invQuantity, double invPowerMax) {
+    public OpenLoopController(ControllerSettings settings, int invQuantity, double invPowerMax) {
         super(invQuantity, invPowerMax);
     }
 

@@ -22,6 +22,7 @@ public class Controller {
     private SubstationSettings substationSettings;
     private InverterSettings inverterSettings;
     private SunSettings sunSettings;
+    private ControllerSettings controllerSettings;
 
     private Simulator simulator;
     private AbstractSun sun;
@@ -43,6 +44,7 @@ public class Controller {
         substationSettings = new SubstationSettings();
         inverterSettings = new InverterSettings();
         sunSettings = new SunSettings();
+        controllerSettings = new ControllerSettings();
 
         setupUIElements();
         runSim();
@@ -61,12 +63,12 @@ public class Controller {
 
         // Create a list of controllers
         List<AbstractController> controllers = new ArrayList<>();
-        controllers.add(new NaiveController(simulatorSettings.invQuantity, inverterSettings.maxPower));
-        controllers.add(new OpenLoopController(simulatorSettings.invQuantity, inverterSettings.maxPower));
-        controllers.add(new ProportionalStepController(simulatorSettings.invQuantity,
-                inverterSettings.maxPower, simulatorSettings.controllerExecutionRate));
-        controllers.add(new ComplexController(simulatorSettings.invQuantity,
-                inverterSettings.maxPower, simulatorSettings.controllerExecutionRate));
+        controllers.add(new NaiveController(controllerSettings ,simulatorSettings.invQuantity, inverterSettings.maxPower));
+        controllers.add(new OpenLoopController(controllerSettings, simulatorSettings.invQuantity, inverterSettings.maxPower));
+        controllers.add(new ProportionalStepController(controllerSettings, simulatorSettings.invQuantity,
+                inverterSettings.maxPower));
+        controllers.add(new ComplexController(controllerSettings, simulatorSettings.invQuantity,
+                inverterSettings.maxPower));
 
 
         // Create 2d array to store results of simulation
@@ -78,10 +80,13 @@ public class Controller {
         // Run simulation once per controller
         String[] controllerNames = new String[controllerQuantity];
         for (int i = 0; i < controllerQuantity; i++) {
+
             resetSimInstances();
             controller = controllers.get(i);
+
             simulator = new Simulator(simulatorSettings, substation, sun, setPoint, controller, inverters);
             simResults[i] = simulator.run();
+
             controllerNames[i] = controller.getControllerName();
         }
 

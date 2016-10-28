@@ -3,6 +3,10 @@ Make interfaces where they should be
 Make every simulation object based on one standard object, which has the concept of timestamp and that logic
 Create settings classes and move device specific settings out of the simulation settings class
 Add a reset method to base level interface
+Consolidate controller class structure, make all controllers aware of timestamp for consistency
+
+Move more configuration values into settings classes
+Determine solution for settings which are used in multiple classes
 
 
 Consider modifying simulation to allow stepping through externally
@@ -12,7 +16,6 @@ and support for multiple controller types at once
 Modify controller classes to start at set point of zero?
     or come up with some way to skip the first x minutes of simulation to allow "steady state"
 Add all simulation settings to GUI
-Modify sun class constructors allow configuration variables to be passed in
 Create step change set point
 Create sine wave sun
 Test ppcSim.sim.ComplexController for set point step changes with relatively constant irradiance

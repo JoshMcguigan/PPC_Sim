@@ -3,26 +3,28 @@ package ppcSim.sim;
 
 public abstract class AbstractTimeBasedController extends AbstractController {
 
+    private ControllerSettings settings;
+
     private double maxStepSize = 2.5; // in % of full plant output per minute
     protected double maxStepSizePerExecution;
 
-    private double executionRate; // Controller execution rate in seconds
     private double lastExecutionTime;
 
 
 
-    AbstractTimeBasedController(int invQuantity, double invPowerMax, double executionRate) {
+    AbstractTimeBasedController(ControllerSettings settings, int invQuantity, double invPowerMax) {
+
         super(invQuantity, invPowerMax);
 
-        this.executionRate = executionRate;
-        maxStepSizePerExecution = ( maxStepSize / 60 ) * executionRate;
+        this.settings = settings;
+        maxStepSizePerExecution = ( maxStepSize / 60 ) * settings.executionRate;
         lastExecutionTime = 0;
 
     }
 
     public double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
 
-        if (timeStamp >= lastExecutionTime + executionRate ) {
+        if (timeStamp >= lastExecutionTime + settings.executionRate ) {
 
             lastExecutionTime = timeStamp;
 

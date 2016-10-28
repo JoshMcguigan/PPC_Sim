@@ -5,7 +5,7 @@ import java.util.Arrays;
 
 public class NaiveController extends AbstractController {
 
-    public NaiveController(int invQuantity, double invPowerMax) {
+    public NaiveController(ControllerSettings settings, int invQuantity, double invPowerMax) {
         super(invQuantity, invPowerMax);
     }
 

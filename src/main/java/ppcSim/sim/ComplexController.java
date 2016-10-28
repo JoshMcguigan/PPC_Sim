@@ -19,9 +19,9 @@ public class ComplexController extends AbstractTimeBasedController {
     private boolean overProduction; // Flag set when plant is overproducing
     private boolean inDeadBand; // Flag set when plant is in dead band
 
-    public ComplexController(int invQuantity, double invPowerMax, double executionRate) {
+    public ComplexController(ControllerSettings settings, int invQuantity, double invPowerMax) {
 
-        super(invQuantity, invPowerMax, executionRate);
+        super(settings, invQuantity, invPowerMax);
 
         belowSetPoint = new boolean[invQuantity];
         atSetPoint = new boolean[invQuantity];
