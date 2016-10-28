@@ -10,24 +10,24 @@ import java.util.Random;
 // Class created to provide irradiance values for each inverter
 public abstract class AbstractSun extends AbstractSimulationObject{
 
-    protected final double maxIrr;
-    protected final int invQuantity;
+    protected SunSettings settings;
+
     protected double[] irradiance;
     protected double irrAvg;
     protected final Random randomizer;
 
-    AbstractSun(double maxIrr, int invQuantity){
+    AbstractSun(SunSettings settings, int invQuantity){
 
         super();
 
-        this.maxIrr = maxIrr;
-        this.invQuantity = invQuantity;
+        this.settings = settings;
+
         randomizer = new Random();
 
-        irrAvg = maxIrr;
+        irrAvg = settings.maxIrr;
 
         irradiance = new double[invQuantity];
-        Arrays.fill(irradiance, maxIrr);
+        Arrays.fill(irradiance, settings.maxIrr);
     }
 
     // Logic controlling irradiance levels to each inverter goes here

@@ -2,6 +2,7 @@ Clean up class tree
 Make interfaces where they should be
 Make every simulation object based on one standard object, which has the concept of timestamp and that logic
 Create settings classes and move device specific settings out of the simulation settings class
+Add a reset method to base level interface
 
 
 Consider modifying simulation to allow stepping through externally

@@ -21,6 +21,7 @@ public class Controller {
     private SimulatorSettings simulatorSettings;
     private SubstationSettings substationSettings;
     private InverterSettings inverterSettings;
+    private SunSettings sunSettings;
 
     private Simulator simulator;
     private AbstractSun sun;
@@ -41,6 +42,7 @@ public class Controller {
         simulatorSettings = new SimulatorSettings();
         substationSettings = new SubstationSettings();
         inverterSettings = new InverterSettings();
+        sunSettings = new SunSettings();
 
         setupUIElements();
         runSim();
@@ -90,7 +92,7 @@ public class Controller {
     }
 
     private void resetSimInstances(){
-        sun = new TriangleWaveSun(simulatorSettings.maxIrr, simulatorSettings.invQuantity);
+        sun = new TriangleWaveSun(sunSettings, simulatorSettings.invQuantity);
         setPoint = new ConstantSetPoint(simulatorSettings.plantPowerSetPoint);
         substation = new Substation(substationSettings);
         inverters = Inverter.getArray(inverterSettings, simulatorSettings.invQuantity);
