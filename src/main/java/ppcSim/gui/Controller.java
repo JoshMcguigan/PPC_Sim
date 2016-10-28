@@ -18,8 +18,10 @@ import java.util.List;
 
 public class Controller {
 
-    private Simulator simulator;
     private SimulatorSettings simulatorSettings;
+    private SubstationSettings substationSettings;
+
+    private Simulator simulator;
     private AbstractSun sun;
     private AbstractSetPoint setPoint;
     private AbstractController controller;
@@ -36,6 +38,8 @@ public class Controller {
     protected void initialize() {
 
         simulatorSettings = new SimulatorSettings();
+        substationSettings = new SubstationSettings();
+
         setupUIElements();
         runSim();
 
@@ -72,7 +76,7 @@ public class Controller {
         for (int i = 0; i < controllerQuantity; i++) {
             resetSimInstances();
             controller = controllers.get(i);
-            simulator = new Simulator(simulatorSettings, sun, setPoint, controller, substation, inverters);
+            simulator = new Simulator(simulatorSettings, substationSettings, sun, setPoint, controller, inverters);
             simResults[i] = simulator.run();
             controllerNames[i] = controller.getControllerName();
         }
@@ -86,7 +90,7 @@ public class Controller {
     private void resetSimInstances(){
         sun = new TriangleWaveSun(simulatorSettings.maxIrr, simulatorSettings.invQuantity);
         setPoint = new ConstantSetPoint(simulatorSettings.plantPowerSetPoint);
-        substation = new Substation(simulatorSettings.substationDeadTime);
+        substation = new Substation(substationSettings);
         inverters = Inverter.getArray(simulatorSettings.invMaxPower, simulatorSettings.invMaxIrr,
                 simulatorSettings.invVariability, simulatorSettings.invQuantity);
     }

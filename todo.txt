@@ -1,12 +1,21 @@
+Clean up class tree
+Make interfaces where they should be
+Make every simulation object based on one standard object, which has the concept of timestamp and that logic
+Create settings classes and move device specific settings out of the simulation settings class
+
+
+Consider modifying simulation to allow stepping through externally
+and support for multiple controller types at once
+
+
 Modify controller classes to start at set point of zero?
     or come up with some way to skip the first x minutes of simulation to allow "steady state"
 Add all simulation settings to GUI
 Modify sun class constructors allow configuration variables to be passed in
-Create inverter group class which contains array of inverters
-Create step change set point, and set point factory
+Create step change set point
 Create sine wave sun
 Test ppcSim.sim.ComplexController for set point step changes with relatively constant irradiance
-Implement simulation analysis after sim runs
+Implement simulation analysis
 Confirm set point outputs to each inverters varies over time, ensure set points equalize over time
 Implement ability to simulate inverters going offline (either just loss of comms but still producing or inverter turning completely off)
 Ability to interface with actual plant controller for testing and analysis

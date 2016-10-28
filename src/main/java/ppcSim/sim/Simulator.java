@@ -1,11 +1,12 @@
 package ppcSim.sim;
 
-import java.util.Arrays;
 import java.util.stream.DoubleStream;
 
 public class Simulator {
 
-    public SimulatorSettings settings;
+    public SimulatorSettings simulatorSettings;
+    public SubstationSettings substationSettings;
+
     public AbstractSun sun;
     public AbstractSetPoint setPoint;
     public AbstractController controller;
@@ -15,33 +16,34 @@ public class Simulator {
     double[] powerSetPoints;
     double[] invPower;
 
-    public Simulator(SimulatorSettings settings, AbstractSun sun, AbstractSetPoint setPoint,
-                     AbstractController controller, Substation substation, Inverter[] inverters){
-        this.settings = settings;
+    public Simulator(SimulatorSettings simulatorSettings, SubstationSettings substationSettings, AbstractSun sun, AbstractSetPoint setPoint,
+                     AbstractController controller, Inverter[] inverters){
+        this.simulatorSettings = simulatorSettings;
+        this.substationSettings = substationSettings;
         this.sun = sun;
         this.setPoint = setPoint;
         this.controller = controller;
-        this.substation = substation;
+        this.substation = new Substation(substationSettings);
         this.inverters = inverters;
     }
 
     public Simulator(){
-        settings = new SimulatorSettings();
-        sun = new TriangleWaveSun(settings.maxIrr, settings.invQuantity);
-        setPoint = new ConstantSetPoint(settings.plantPowerSetPoint);
-        controller = new ComplexController(settings.invQuantity, settings.invMaxPower,
-                settings.controllerExecutionRate);
-        substation = new Substation(settings.substationDeadTime);
-        inverters = Inverter.getArray(settings.invMaxPower, settings.invMaxIrr,
-                settings.invVariability, settings.invQuantity);
+        simulatorSettings = new SimulatorSettings();
+        sun = new TriangleWaveSun(simulatorSettings.maxIrr, simulatorSettings.invQuantity);
+        setPoint = new ConstantSetPoint(simulatorSettings.plantPowerSetPoint);
+        controller = new ComplexController(simulatorSettings.invQuantity, simulatorSettings.invMaxPower,
+                simulatorSettings.controllerExecutionRate);
+        substation = new Substation(substationSettings);
+        inverters = Inverter.getArray(simulatorSettings.invMaxPower, simulatorSettings.invMaxIrr,
+                simulatorSettings.invVariability, simulatorSettings.invQuantity);
     }
 
     public PlantData[] run(){
 
-        int steps = getStepQuantity(settings);
+        int steps = getStepQuantity(simulatorSettings);
 
         PlantData[] plantData = new PlantData[steps];
-        int invQuantity = settings.invQuantity;
+        int invQuantity = simulatorSettings.invQuantity;
 
         powerSetPoints = new double[invQuantity];
         invPower = new double[invQuantity];
@@ -56,7 +58,7 @@ public class Simulator {
 
     private PlantData step(int currentStep){
 
-        double timeStamp = currentStep*settings.simStepSize;
+        double timeStamp = currentStep* simulatorSettings.simStepSize;
         double[] irradiance = sun.getIrradiance(timeStamp);
         double plantPowerSetPoint = setPoint.getSetPoint(timeStamp);
 

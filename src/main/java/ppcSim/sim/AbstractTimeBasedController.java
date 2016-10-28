@@ -1,8 +1,6 @@
 package ppcSim.sim;
 
-/**
- * Created by Josh on 10/20/16.
- */
+
 public abstract class AbstractTimeBasedController extends AbstractController {
 
     private double maxStepSize = 2.5; // in % of full plant output per minute

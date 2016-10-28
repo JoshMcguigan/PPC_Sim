@@ -9,12 +9,15 @@ import java.util.stream.*;
 
 public class Substation {
 
-    private final double deadTime; // Time delay in reporting plant power
+    private SubstationSettings substationSettings;
+
     private Map<Double,Double> dataStore; // Stores <timeStamp, calculated plant power>
     private double lastReportedPower; // Stores the last reported power value
 
-    public Substation(double deadTime){
-        this.deadTime = deadTime;
+    public Substation(SubstationSettings substationSettings){
+
+        this.substationSettings = substationSettings;
+
         dataStore = new HashMap<Double,Double>();
         lastReportedPower = 0;
     }
@@ -28,7 +31,7 @@ public class Substation {
         Double selectedTime = 0.0;
         Double sitePower = 0.0;
         for (Double key: dataStore.keySet() ){
-            if ( timeStamp-deadTime >= key){
+            if ( timeStamp-substationSettings.deadTime >= key){
                 // Choose the latest time stamp which is before the deadTime
                 if (key >= selectedTime ) {
                     selectedTime = key;
