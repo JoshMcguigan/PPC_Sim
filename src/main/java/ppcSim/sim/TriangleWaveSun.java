@@ -12,7 +12,7 @@ public class TriangleWaveSun extends AbstractSun{
 
         super(settings, invQuantity);
 
-        changeRate = 2 * settings.range / settings.period;
+        changeRate = 4 * settings.range / settings.period;
 
         irradiance = settings.baseIrr;
 

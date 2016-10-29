@@ -111,6 +111,7 @@ public class Controller {
         switch (irradiancePattern) {
             case "Triangle Wave": return new TriangleWaveSun(sunSettings, simulatorSettings.invQuantity);
             case "Square Wave": return new SquareWaveSun(sunSettings, simulatorSettings.invQuantity);
+            case "Sine Wave": return new SineWaveSun(sunSettings, simulatorSettings.invQuantity);
             default: return new TriangleWaveSun(sunSettings, simulatorSettings.invQuantity);
         }
     }

@@ -32,6 +32,7 @@
             <FXCollections fx:factory="observableArrayList">
                 <String fx:value="Triangle Wave"/>
                 <String fx:value="Square Wave"/>
+                <String fx:value="Sine Wave"/>
             </FXCollections>
         </items>
     </ChoiceBox>
