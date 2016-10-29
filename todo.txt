@@ -8,6 +8,7 @@ Consolidate controller class structure, make all controllers aware of timestamp 
 Move more configuration values into settings classes
 Determine solution for settings which are used in multiple classes
 
+create new method getIrradianceAverage rather than public property
 
 Consider modifying simulation to allow stepping through externally
 and support for multiple controller types at once

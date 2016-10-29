@@ -8,8 +8,10 @@
 
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
+<?import javafx.collections.FXCollections?>
+<?import java.lang.String?>
 <GridPane fx:controller="ppcSim.gui.Controller"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="10" vgap="10">
+          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="20" vgap="10">
     <padding><Insets top="25" right="25" bottom="10" left="25"/></padding>
 
     <Label text="Power Set Point (MW)"
@@ -22,15 +24,28 @@
     <Slider GridPane.columnIndex="1" GridPane.rowIndex="1"
             fx:id="sliderSimLength"></Slider>
 
-    <HBox spacing="10" alignment="bottom_right"
-          GridPane.columnIndex="2" GridPane.rowIndex="1">
+    <Label text="Irradiance Pattern"
+           GridPane.columnIndex="2" GridPane.rowIndex="0"></Label>
+    <ChoiceBox GridPane.columnIndex="2" GridPane.rowIndex="1"
+        fx:id="choiceBoxIrradiancePattern" value="Triangle Wave">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Triangle Wave"/>
+                <String fx:value="Square Wave"/>
+            </FXCollections>
+        </items>
+    </ChoiceBox>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT"
+          GridPane.columnIndex="3" GridPane.rowIndex="1">
         <Button text="Run Sim"
                 onAction="#runSim"/>
     </HBox>
 
+
     <LineChart
             GridPane.columnIndex="0" GridPane.rowIndex="2"
-            GridPane.columnSpan="3"
+            GridPane.columnSpan="4"
             fx:id="chart">
         <xAxis><NumberAxis label="Time (Minutes)" lowerBound="0" upperBound="600" tickUnit="1"/></xAxis>
         <yAxis><NumberAxis label="Plant Power Output (MW)" lowerBound="0" upperBound="40" tickUnit="1"/></yAxis>

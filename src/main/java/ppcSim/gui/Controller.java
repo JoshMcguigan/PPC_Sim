@@ -8,6 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 
 import ppcSim.sim.*;
@@ -36,6 +37,7 @@ public class Controller {
     @FXML private LineChart<Double, Double> chart;
     @FXML private Slider sliderPowerSetPoint;
     @FXML private Slider sliderSimLength;
+    @FXML private ChoiceBox choiceBoxIrradiancePattern;
 
     @FXML
     protected void initialize() {
@@ -97,10 +99,20 @@ public class Controller {
     }
 
     private void resetSimInstances(){
-        sun = new TriangleWaveSun(sunSettings, simulatorSettings.invQuantity);
+        sun = getNewSun();
         setPoint = new ConstantSetPoint(simulatorSettings.plantPowerSetPoint);
         substation = new Substation(substationSettings);
         inverters = Inverter.getArray(inverterSettings, simulatorSettings.invQuantity);
+    }
+
+    private AbstractSun getNewSun(){
+        String irradiancePattern = (String)choiceBoxIrradiancePattern.getValue();
+
+        switch (irradiancePattern) {
+            case "Triangle Wave": return new TriangleWaveSun(sunSettings, simulatorSettings.invQuantity);
+            case "Square Wave": return new SquareWaveSun(sunSettings, simulatorSettings.invQuantity);
+            default: return new TriangleWaveSun(sunSettings, simulatorSettings.invQuantity);
+        }
     }
 
     private void updateChart (PlantData[][] plantData, String[] controllerNames){
