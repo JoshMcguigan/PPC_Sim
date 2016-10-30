@@ -1,0 +1,7 @@
+.tab-pane .tab-header-area .tab-header-background {
+    -fx-opacity: 0;
+}
+
+#buttonRunSim {
+    -fx-graphic: url('../Icons/Process-50.png');
+}

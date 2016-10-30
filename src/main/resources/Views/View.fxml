@@ -11,54 +11,96 @@
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
 <GridPane fx:controller="ppcSim.gui.Controller"
-          xmlns:fx="http://javafx.com/fxml" alignment="center" hgap="20" vgap="10">
-    <padding><Insets top="25" right="25" bottom="10" left="25"/></padding>
+          xmlns:fx="http://javafx.com/fxml" alignment="CENTER" hgap="20" vgap="10">
+    <padding><Insets top="5" right="25" bottom="10" left="25"/></padding>
 
-    <Label text="Power Set Point (MW)"
-        GridPane.columnIndex="0" GridPane.rowIndex="0"></Label>
-    <Slider GridPane.columnIndex="0" GridPane.rowIndex="1"
-            fx:id="sliderPowerSetPoint"></Slider>
+    <TabPane GridPane.columnIndex="0" GridPane.rowIndex="0"
+        tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+            <Tab text="Simulation Settings">
+                <content>
+                    <GridPane alignment="CENTER" hgap="20" vgap="10">
+                        <padding><Insets top="15" bottom="0"/></padding>
+                        <Label text="Power Set Point (MW)"
+                               GridPane.columnIndex="0" GridPane.rowIndex="0"></Label>
+                        <Slider GridPane.columnIndex="0" GridPane.rowIndex="1"
+                                fx:id="sliderPowerSetPoint"></Slider>
 
-    <Label text="Simulation Length (Minutes)"
-           GridPane.columnIndex="1" GridPane.rowIndex="0"></Label>
-    <Slider GridPane.columnIndex="1" GridPane.rowIndex="1"
-            fx:id="sliderSimLength"></Slider>
+                        <Label text="Simulation Length (Minutes)"
+                               GridPane.columnIndex="1" GridPane.rowIndex="0"></Label>
+                        <Slider GridPane.columnIndex="1" GridPane.rowIndex="1"
+                                fx:id="sliderSimLength"></Slider>
 
-    <Label text="Irradiance Pattern"
-           GridPane.columnIndex="2" GridPane.rowIndex="0"></Label>
-    <ChoiceBox GridPane.columnIndex="2" GridPane.rowIndex="1"
-        fx:id="choiceBoxIrradiancePattern" value="Triangle Wave">
-        <items>
-            <FXCollections fx:factory="observableArrayList">
-                <String fx:value="Triangle Wave"/>
-                <String fx:value="Square Wave"/>
-                <String fx:value="Sine Wave"/>
-            </FXCollections>
-        </items>
-    </ChoiceBox>
+                        <Label text="Irradiance Pattern"
+                               GridPane.columnIndex="2" GridPane.rowIndex="0"></Label>
+                        <ChoiceBox GridPane.columnIndex="2" GridPane.rowIndex="1"
+                                   fx:id="choiceBoxIrradiancePattern" value="Triangle Wave">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Triangle Wave"/>
+                                    <String fx:value="Square Wave"/>
+                                    <String fx:value="Sine Wave"/>
+                                </FXCollections>
+                            </items>
+                        </ChoiceBox>
 
-    <Label text="Set Point Pattern"
-           GridPane.columnIndex="3" GridPane.rowIndex="0"></Label>
-    <ChoiceBox GridPane.columnIndex="3" GridPane.rowIndex="1"
-               fx:id="choiceBoxSetPointPattern" value="Constant">
-        <items>
-            <FXCollections fx:factory="observableArrayList">
-                <String fx:value="Constant"/>
-                <String fx:value="Square Wave"/>
-            </FXCollections>
-        </items>
-    </ChoiceBox>
+                        <Label text="Set Point Pattern"
+                               GridPane.columnIndex="3" GridPane.rowIndex="0"></Label>
+                        <ChoiceBox GridPane.columnIndex="3" GridPane.rowIndex="1"
+                                   fx:id="choiceBoxSetPointPattern" value="Constant">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Constant"/>
+                                    <String fx:value="Square Wave"/>
+                                </FXCollections>
+                            </items>
+                        </ChoiceBox>
 
-    <HBox spacing="10" alignment="CENTER_RIGHT"
-          GridPane.columnIndex="4" GridPane.rowIndex="1">
-        <Button text="Run Sim"
-                onAction="#runSim"/>
-    </HBox>
+                    </GridPane>
+                </content>
+            </Tab>
+
+
+            <Tab text="Irradiance Settings">
+                <content>
+                    <GridPane alignment="CENTER" hgap="20" vgap="10">
+                        <padding><Insets top="15" bottom="0"/></padding>
+
+                    </GridPane>
+                </content>
+            </Tab>
+
+
+            <Tab text="Set Point Settings">
+                <content>
+                    <GridPane alignment="CENTER" hgap="20" vgap="10">
+                        <padding><Insets top="15" bottom="0"/></padding>
+
+                    </GridPane>
+                </content>
+            </Tab>
+
+
+            <Tab text="Misc Settings">
+                <content>
+                    <GridPane alignment="CENTER" hgap="20" vgap="10">
+                        <padding><Insets top="15" bottom="0"/></padding>
+
+                    </GridPane>
+                </content>
+            </Tab>
+
+        </tabs>
+    </TabPane>
+
+    <Button fx:id="buttonRunSim"
+            GridPane.columnIndex="1" GridPane.rowIndex="0"
+            onAction="#runSim"/>
 
 
     <LineChart
-            GridPane.columnIndex="0" GridPane.rowIndex="2"
-            GridPane.columnSpan="5"
+            GridPane.columnIndex="0" GridPane.rowIndex="1"
+            GridPane.columnSpan="2"
             fx:id="chart">
         <xAxis><NumberAxis label="Time (Minutes)" lowerBound="0" upperBound="600" tickUnit="1"/></xAxis>
         <yAxis><NumberAxis label="Plant Power Output (MW)" lowerBound="0" upperBound="40" tickUnit="1"/></yAxis>
