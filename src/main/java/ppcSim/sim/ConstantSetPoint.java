@@ -3,15 +3,13 @@ package ppcSim.sim;
 
 public class ConstantSetPoint extends AbstractSetPoint {
 
-    private double constantSetPoint;
-
-    public ConstantSetPoint(double constantSetPoint){
-        this.constantSetPoint = constantSetPoint;
+    public ConstantSetPoint(SetPointSettings settings){
+        super(settings);
     }
 
     @Override
     public double getSetPoint(double timeStamp) {
-        return constantSetPoint;
+        return settings.baseSetPoint;
     }
 
 }

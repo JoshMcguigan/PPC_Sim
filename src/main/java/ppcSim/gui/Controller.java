@@ -24,6 +24,7 @@ public class Controller {
     private InverterSettings inverterSettings;
     private SunSettings sunSettings;
     private ControllerSettings controllerSettings;
+    private SetPointSettings setPointSettings;
 
     private Simulator simulator;
     private AbstractSun sun;
@@ -38,6 +39,7 @@ public class Controller {
     @FXML private Slider sliderPowerSetPoint;
     @FXML private Slider sliderSimLength;
     @FXML private ChoiceBox choiceBoxIrradiancePattern;
+    @FXML private ChoiceBox choiceBoxSetPointPattern;
 
     @FXML
     protected void initialize() {
@@ -47,6 +49,7 @@ public class Controller {
         inverterSettings = new InverterSettings();
         sunSettings = new SunSettings();
         controllerSettings = new ControllerSettings();
+        setPointSettings = new SetPointSettings();
 
         setupUIElements();
         runSim();
@@ -100,7 +103,7 @@ public class Controller {
 
     private void resetSimInstances(){
         sun = getNewSun();
-        setPoint = new ConstantSetPoint(simulatorSettings.plantPowerSetPoint);
+        setPoint = getNewSetPoint();
         substation = new Substation(substationSettings);
         inverters = Inverter.getArray(inverterSettings, simulatorSettings.invQuantity);
     }
@@ -113,6 +116,16 @@ public class Controller {
             case "Square Wave": return new SquareWaveSun(sunSettings, simulatorSettings.invQuantity);
             case "Sine Wave": return new SineWaveSun(sunSettings, simulatorSettings.invQuantity);
             default: return new TriangleWaveSun(sunSettings, simulatorSettings.invQuantity);
+        }
+    }
+
+    private AbstractSetPoint getNewSetPoint(){
+        String setPointPattern = (String)choiceBoxSetPointPattern.getValue();
+
+        switch(setPointPattern) {
+            case "Constant": return new ConstantSetPoint(setPointSettings);
+            case "Square Wave": return new SquareWaveSetPoint(setPointSettings);
+            default: return new ConstantSetPoint(setPointSettings);
         }
     }
 
@@ -153,7 +166,7 @@ public class Controller {
 
     private void setupUIElements(){
         // Set up sliders
-        sliderPowerSetPoint.setValue(simulatorSettings.plantPowerSetPoint);
+        sliderPowerSetPoint.setValue(setPointSettings.baseSetPoint);
         sliderPowerSetPoint.setMin(0.0);
         sliderPowerSetPoint.setMax(simulatorSettings.invQuantity * inverterSettings.maxPower);
         sliderPowerSetPoint.setShowTickLabels(true);
@@ -177,7 +190,7 @@ public class Controller {
             public void changed(ObservableValue<? extends Number> observable,
                                 Number oldValue, Number newValue) {
 
-                simulatorSettings.plantPowerSetPoint = (double)newValue;
+                setPointSettings.baseSetPoint = (double)newValue;
             }
         });
         sliderSimLength.valueProperty().addListener(new ChangeListener<Number>() {

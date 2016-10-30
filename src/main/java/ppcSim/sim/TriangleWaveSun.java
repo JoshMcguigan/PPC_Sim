@@ -14,7 +14,7 @@ public class TriangleWaveSun extends AbstractSun{
 
         changeRate = 4 * settings.range / settings.period;
 
-        irradiance = settings.baseIrr;
+        irradiance = settings.baseIrr - settings.range;
 
         noiseyIrr = new double[invQuantity];
     }

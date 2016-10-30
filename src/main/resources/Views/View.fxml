@@ -37,8 +37,20 @@
         </items>
     </ChoiceBox>
 
+    <Label text="Set Point Pattern"
+           GridPane.columnIndex="3" GridPane.rowIndex="0"></Label>
+    <ChoiceBox GridPane.columnIndex="3" GridPane.rowIndex="1"
+               fx:id="choiceBoxSetPointPattern" value="Constant">
+        <items>
+            <FXCollections fx:factory="observableArrayList">
+                <String fx:value="Constant"/>
+                <String fx:value="Square Wave"/>
+            </FXCollections>
+        </items>
+    </ChoiceBox>
+
     <HBox spacing="10" alignment="CENTER_RIGHT"
-          GridPane.columnIndex="3" GridPane.rowIndex="1">
+          GridPane.columnIndex="4" GridPane.rowIndex="1">
         <Button text="Run Sim"
                 onAction="#runSim"/>
     </HBox>
@@ -46,7 +58,7 @@
 
     <LineChart
             GridPane.columnIndex="0" GridPane.rowIndex="2"
-            GridPane.columnSpan="4"
+            GridPane.columnSpan="5"
             fx:id="chart">
         <xAxis><NumberAxis label="Time (Minutes)" lowerBound="0" upperBound="600" tickUnit="1"/></xAxis>
         <yAxis><NumberAxis label="Plant Power Output (MW)" lowerBound="0" upperBound="40" tickUnit="1"/></yAxis>
