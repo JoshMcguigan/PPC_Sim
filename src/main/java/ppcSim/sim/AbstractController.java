@@ -9,7 +9,8 @@ public abstract class AbstractController {
     protected final double plantPowerMax;
     protected double[] powerSetPoints;
     protected double maxPowerSetPoint = 100;
-    protected double minPowerSetPoint = 10;
+    protected double minPowerSetPoint = 5;
+    protected double initialPowerSetPoint;
 
     protected AbstractController(int invQuantity, double invPowerMax){
         this.invQuantity = invQuantity;
@@ -19,8 +20,10 @@ public abstract class AbstractController {
 
         plantPowerMax = invQuantity * invPowerMax;
 
+        initialPowerSetPoint = ( minPowerSetPoint + maxPowerSetPoint ) / 2;
+
         powerSetPoints = new double[invQuantity];
-        Arrays.fill(powerSetPoints, minPowerSetPoint + maxPowerSetPoint / 2);
+        Arrays.fill(powerSetPoints, initialPowerSetPoint);
     }
 
     public abstract double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp);

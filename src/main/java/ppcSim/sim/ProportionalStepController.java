@@ -12,10 +12,12 @@ public class ProportionalStepController extends AbstractTimeBasedController {
     private double deadband = .2; // control dead band in MW
 
 
-    private double powerSetPoint = minPowerSetPoint + maxPowerSetPoint / 2; // in %, sent to every inverter
+    private double powerSetPoint; // in %, sent to every inverter
 
     public ProportionalStepController(ControllerSettings settings, int invQuantity, double invPowerMax) {
         super(settings, invQuantity, invPowerMax);
+
+        powerSetPoint = initialPowerSetPoint;
     }
 
 
