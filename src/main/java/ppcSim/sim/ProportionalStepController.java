@@ -2,15 +2,10 @@ package ppcSim.sim;
 
 import java.util.Arrays;
 
-/**
- * Created by Josh on 10/6/16.
- */
 public class ProportionalStepController extends AbstractTimeBasedController {
     // This is a simple closed loop controller which calculates a single value to send to all inverters
     // Controller steps the power set point in order to move the plant power output in the direction of the set point
     private double gain = 1;
-    private double deadband = .2; // control dead band in MW
-
 
     private double powerSetPoint; // in %, sent to every inverter
 
@@ -24,7 +19,7 @@ public class ProportionalStepController extends AbstractTimeBasedController {
     public double[] executeController(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
 
         // If error is within deadband, control action stays constant
-        if (Math.abs(plantPowerSetPoint - currentPlantPower) > deadband || (currentPlantPower>plantPowerSetPoint)) {
+        if (Math.abs(plantPowerSetPoint - currentPlantPower) > settings.deadBand || (currentPlantPower>plantPowerSetPoint)) {
             // If the plant is overproducing, step down the power at the maximum rate
             if (currentPlantPower > plantPowerSetPoint) {
                 powerSetPoint -= maxStepSizePerExecution;

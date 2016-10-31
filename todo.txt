@@ -10,6 +10,8 @@ create new method getIrradianceAverage rather than public property
 Consider modifying simulation to allow stepping through externally
 and support for multiple controller types at once
 
+Add controller settings tab
+
 
 Modify controller classes to start at set point of zero?
     or come up with some way to skip the first x minutes of simulation to allow "steady state"

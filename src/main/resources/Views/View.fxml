@@ -26,7 +26,7 @@
                                GridPane.columnIndex="0" GridPane.rowIndex="0"></Label>
                         <Slider GridPane.columnIndex="0" GridPane.rowIndex="1"
                                 fx:id="sliderSimLength"></Slider>
-                        <Label text="Simulation Step Size (1/10 Seconds)"
+                        <Label text="Simulation Step Size (Seconds)"
                                GridPane.columnIndex="1" GridPane.rowIndex="0"></Label>
                         <Slider GridPane.columnIndex="1" GridPane.rowIndex="1"
                                 fx:id="sliderSimStepSize"></Slider>
@@ -107,6 +107,8 @@
                     </GridPane>
                 </content>
             </Tab>
+
+
 
 
         </tabs>

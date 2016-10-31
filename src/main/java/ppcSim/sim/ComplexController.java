@@ -1,13 +1,9 @@
 package ppcSim.sim;
 
-/**
- * Created by Josh on 10/6/16.
- */
 public class ComplexController extends AbstractTimeBasedController {
 
     private double atSetPointDeadBand = 98; // Inverter must produce at least this fraction of set point to be considered producing at set point, in %
     private double belowSetPointDeadBand = 96; // Inverters producing less than this fraction of set point are considered to be under-producing, in %
-    private double deadBand = .2; // control dead band in MW
 
     private boolean[] belowSetPoint; // Used to track which inverters are underperforming
     private boolean[] atSetPoint; // Used to track inverters which are performing at set point
@@ -52,7 +48,7 @@ public class ComplexController extends AbstractTimeBasedController {
         }
 
         // Determine plant state
-        inDeadBand = !(plantPowerSetPoint - currentPlantPower > deadBand);
+        inDeadBand = !(plantPowerSetPoint - currentPlantPower > settings.deadBand);
         overProduction = currentPlantPower > plantPowerSetPoint;
 
 
@@ -61,7 +57,7 @@ public class ComplexController extends AbstractTimeBasedController {
         if (overProduction) {
 
             // Calculate step down size in order to bring the plant power down to middle of dead band
-            stepDownSize = Math.min(maxStepSizePerExecution, ((currentPlantPower - plantPowerSetPoint + (0.5 * deadBand)) / (invQuantity * invPowerMax)) * 100);
+            stepDownSize = Math.min(maxStepSizePerExecution, ((currentPlantPower - plantPowerSetPoint + (0.5 * settings.deadBand)) / (invQuantity * invPowerMax)) * 100);
 
             for (int i = 0; i < invQuantity; i++) {
                 // Set the reduced power set point based on actual current production
@@ -84,7 +80,7 @@ public class ComplexController extends AbstractTimeBasedController {
             // This can be higher than configured max step size because it considers that only inverters which are performing
             //      at set point will be given higher set point commands
             // Step size is reduced when current plant power is close to set point, in order to target middle of deadband
-            stepUpSize = Math.min(maxStepSizePerExecution, ((plantPowerSetPoint - currentPlantPower - (deadBand / 2)) / plantPowerMax) * 100) * (invQuantity / atSetPointQuantity);
+            stepUpSize = Math.min(maxStepSizePerExecution, ((plantPowerSetPoint - currentPlantPower - (settings.deadBand / 2)) / plantPowerMax) * 100) * (invQuantity / atSetPointQuantity);
 
 
             // For inverters which are producing at set point,

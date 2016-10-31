@@ -185,7 +185,7 @@ public class Controller {
     private void setupSimulatorSettingsTab(){
 
         setupSlider(sliderSimLength, 0.0, 60.0, simulatorSettings.simLength/secondsPerMinute);
-        setupSlider(sliderSimStepSize, 0, 100, simulatorSettings.simStepSize * 10);
+        setupSlider(sliderSimStepSize, 0, 10, simulatorSettings.simStepSize);
 
         sliderSimLength.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -199,7 +199,7 @@ public class Controller {
         sliderSimStepSize.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                simulatorSettings.simStepSize = Math.max((double)newValue, 5) / 10;
+                simulatorSettings.simStepSize = Math.max((double)newValue, 0.5);
             }
         });
     }
