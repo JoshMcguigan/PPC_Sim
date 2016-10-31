@@ -36,15 +36,22 @@ public class Controller {
     private final int secondsPerMinute = 60;
 
     @FXML private LineChart<Double, Double> chart;
-    @FXML private Slider sliderPowerSetPoint;
+
+    // Simulation Settings
     @FXML private Slider sliderSimLength;
-    @FXML private ChoiceBox choiceBoxSetPointPattern;
+    @FXML private Slider sliderSimStepSize;
 
     // Irradiance Settings
     @FXML private Slider sliderIrrBaseLevel;
     @FXML private Slider sliderIrrRange;
     @FXML private Slider sliderIrrCycleTime;
     @FXML private ChoiceBox choiceBoxIrradiancePattern;
+
+    // Set Point Settings
+    @FXML private Slider sliderSetPointBaseLevel;
+    @FXML private Slider sliderSetPointRange;
+    @FXML private Slider sliderSetPointCycleTime;
+    @FXML private ChoiceBox choiceBoxSetPointPattern;
 
 
     @FXML
@@ -59,6 +66,7 @@ public class Controller {
 
         setupSimulatorSettingsTab();
         setupIrradianceSettingsTab();
+        setupSetPointSettingsTab();
 
         runSim();
 
@@ -175,18 +183,10 @@ public class Controller {
     }
 
     private void setupSimulatorSettingsTab(){
-        setupSlider(sliderPowerSetPoint, 0.0, simulatorSettings.invQuantity * inverterSettings.maxPower,
-                setPointSettings.baseSetPoint);
+
         setupSlider(sliderSimLength, 0.0, 60.0, simulatorSettings.simLength/secondsPerMinute);
+        setupSlider(sliderSimStepSize, 0, 100, simulatorSettings.simStepSize * 10);
 
-        sliderPowerSetPoint.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable,
-                                Number oldValue, Number newValue) {
-
-                setPointSettings.baseSetPoint = (double)newValue;
-            }
-        });
         sliderSimLength.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable,
@@ -194,6 +194,12 @@ public class Controller {
 
                 // Allow sim length down to 1 minute only
                 simulatorSettings.simLength = Math.max((double)newValue, 1) * 60;
+            }
+        });
+        sliderSimStepSize.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                simulatorSettings.simStepSize = Math.max((double)newValue, 5) / 10;
             }
         });
     }
@@ -220,6 +226,36 @@ public class Controller {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 sunSettings.period = Math.max((double)newValue, 1) * secondsPerMinute;
+            }
+        });
+    }
+
+    private void setupSetPointSettingsTab(){
+
+        setupSlider(sliderSetPointBaseLevel, 0.0, simulatorSettings.invQuantity * inverterSettings.maxPower,
+                setPointSettings.baseSetPoint);
+        setupSlider(sliderSetPointRange, 0.0, simulatorSettings.invQuantity * inverterSettings.maxPower / 2,
+                setPointSettings.range);
+        setupSlider(sliderSetPointCycleTime, 0.0, 60.0, setPointSettings.period/secondsPerMinute);
+
+        sliderSetPointBaseLevel.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable,
+                                Number oldValue, Number newValue) {
+
+                setPointSettings.baseSetPoint = (double)newValue;
+            }
+        });
+        sliderSetPointRange.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                setPointSettings.range = (double)newValue;
+            }
+        });
+        sliderSetPointCycleTime.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                setPointSettings.period = Math.max( (double)newValue, 1 ) * secondsPerMinute;
             }
         });
     }

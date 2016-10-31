@@ -21,27 +21,15 @@
                 <content>
                     <GridPane alignment="CENTER" hgap="20" vgap="10">
                         <padding><Insets top="15" bottom="0"/></padding>
-                        <Label text="Power Set Point (MW)"
-                               GridPane.columnIndex="0" GridPane.rowIndex="0"></Label>
-                        <Slider GridPane.columnIndex="0" GridPane.rowIndex="1"
-                                fx:id="sliderPowerSetPoint"></Slider>
 
                         <Label text="Simulation Length (Minutes)"
+                               GridPane.columnIndex="0" GridPane.rowIndex="0"></Label>
+                        <Slider GridPane.columnIndex="0" GridPane.rowIndex="1"
+                                fx:id="sliderSimLength"></Slider>
+                        <Label text="Simulation Step Size (1/10 Seconds)"
                                GridPane.columnIndex="1" GridPane.rowIndex="0"></Label>
                         <Slider GridPane.columnIndex="1" GridPane.rowIndex="1"
-                                fx:id="sliderSimLength"></Slider>
-
-                        <Label text="Set Point Pattern"
-                               GridPane.columnIndex="3" GridPane.rowIndex="0"></Label>
-                        <ChoiceBox GridPane.columnIndex="3" GridPane.rowIndex="1"
-                                   fx:id="choiceBoxSetPointPattern" value="Constant">
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="Constant"/>
-                                    <String fx:value="Square Wave"/>
-                                </FXCollections>
-                            </items>
-                        </ChoiceBox>
+                                fx:id="sliderSimStepSize"></Slider>
 
                     </GridPane>
                 </content>
@@ -90,19 +78,36 @@
                     <GridPane alignment="CENTER" hgap="20" vgap="10">
                         <padding><Insets top="15" bottom="0"/></padding>
 
+                        <Label text="Power Set Point (MW)"
+                               GridPane.columnIndex="0" GridPane.rowIndex="0"></Label>
+                        <Slider GridPane.columnIndex="0" GridPane.rowIndex="1"
+                                fx:id="sliderSetPointBaseLevel"></Slider>
+
+                        <Label text="Set Point Range (MW)"
+                               GridPane.columnIndex="1" GridPane.rowIndex="0"></Label>
+                        <Slider GridPane.columnIndex="1" GridPane.rowIndex="1"
+                                fx:id="sliderSetPointRange"></Slider>
+
+                        <Label text="Cycle Time (Minutes)"
+                               GridPane.columnIndex="2" GridPane.rowIndex="0"></Label>
+                        <Slider GridPane.columnIndex="2" GridPane.rowIndex="1"
+                                fx:id="sliderSetPointCycleTime"></Slider>
+                        <Label text="Set Point Pattern"
+                               GridPane.columnIndex="3" GridPane.rowIndex="0"></Label>
+                        <ChoiceBox GridPane.columnIndex="3" GridPane.rowIndex="1"
+                                   fx:id="choiceBoxSetPointPattern" value="Constant">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Constant"/>
+                                    <String fx:value="Square Wave"/>
+                                </FXCollections>
+                            </items>
+                        </ChoiceBox>
+
                     </GridPane>
                 </content>
             </Tab>
 
-
-            <Tab text="Misc Settings">
-                <content>
-                    <GridPane alignment="CENTER" hgap="20" vgap="10">
-                        <padding><Insets top="15" bottom="0"/></padding>
-
-                    </GridPane>
-                </content>
-            </Tab>
 
         </tabs>
     </TabPane>
