@@ -31,19 +31,6 @@
                         <Slider GridPane.columnIndex="1" GridPane.rowIndex="1"
                                 fx:id="sliderSimLength"></Slider>
 
-                        <Label text="Irradiance Pattern"
-                               GridPane.columnIndex="2" GridPane.rowIndex="0"></Label>
-                        <ChoiceBox GridPane.columnIndex="2" GridPane.rowIndex="1"
-                                   fx:id="choiceBoxIrradiancePattern" value="Triangle Wave">
-                            <items>
-                                <FXCollections fx:factory="observableArrayList">
-                                    <String fx:value="Triangle Wave"/>
-                                    <String fx:value="Square Wave"/>
-                                    <String fx:value="Sine Wave"/>
-                                </FXCollections>
-                            </items>
-                        </ChoiceBox>
-
                         <Label text="Set Point Pattern"
                                GridPane.columnIndex="3" GridPane.rowIndex="0"></Label>
                         <ChoiceBox GridPane.columnIndex="3" GridPane.rowIndex="1"
@@ -65,6 +52,33 @@
                 <content>
                     <GridPane alignment="CENTER" hgap="20" vgap="10">
                         <padding><Insets top="15" bottom="0"/></padding>
+                        <Label text="Base Irradiance (W/M^2)"
+                               GridPane.columnIndex="0" GridPane.rowIndex="0"></Label>
+                        <Slider GridPane.columnIndex="0" GridPane.rowIndex="1"
+                                fx:id="sliderIrrBaseLevel"></Slider>
+
+                        <Label text="Irradiance Range (W/M^2)"
+                               GridPane.columnIndex="1" GridPane.rowIndex="0"></Label>
+                        <Slider GridPane.columnIndex="1" GridPane.rowIndex="1"
+                                fx:id="sliderIrrRange"></Slider>
+
+                        <Label text="Cycle Time (Minutes)"
+                               GridPane.columnIndex="2" GridPane.rowIndex="0"></Label>
+                        <Slider GridPane.columnIndex="2" GridPane.rowIndex="1"
+                                fx:id="sliderIrrCycleTime"></Slider>
+
+                        <Label text="Irradiance Pattern"
+                               GridPane.columnIndex="3" GridPane.rowIndex="0"></Label>
+                        <ChoiceBox GridPane.columnIndex="3" GridPane.rowIndex="1"
+                                   fx:id="choiceBoxIrradiancePattern" value="Triangle Wave">
+                            <items>
+                                <FXCollections fx:factory="observableArrayList">
+                                    <String fx:value="Triangle Wave"/>
+                                    <String fx:value="Square Wave"/>
+                                    <String fx:value="Sine Wave"/>
+                                </FXCollections>
+                            </items>
+                        </ChoiceBox>
 
                     </GridPane>
                 </content>

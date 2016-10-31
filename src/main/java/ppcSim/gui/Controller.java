@@ -38,8 +38,14 @@ public class Controller {
     @FXML private LineChart<Double, Double> chart;
     @FXML private Slider sliderPowerSetPoint;
     @FXML private Slider sliderSimLength;
-    @FXML private ChoiceBox choiceBoxIrradiancePattern;
     @FXML private ChoiceBox choiceBoxSetPointPattern;
+
+    // Irradiance Settings
+    @FXML private Slider sliderIrrBaseLevel;
+    @FXML private Slider sliderIrrRange;
+    @FXML private Slider sliderIrrCycleTime;
+    @FXML private ChoiceBox choiceBoxIrradiancePattern;
+
 
     @FXML
     protected void initialize() {
@@ -51,7 +57,9 @@ public class Controller {
         controllerSettings = new ControllerSettings();
         setPointSettings = new SetPointSettings();
 
-        setupUIElements();
+        setupSimulatorSettingsTab();
+        setupIrradianceSettingsTab();
+
         runSim();
 
     }
@@ -109,6 +117,7 @@ public class Controller {
     }
 
     private AbstractSun getNewSun(){
+
         String irradiancePattern = (String)choiceBoxIrradiancePattern.getValue();
 
         switch (irradiancePattern) {
@@ -117,6 +126,7 @@ public class Controller {
             case "Sine Wave": return new SineWaveSun(sunSettings, simulatorSettings.invQuantity);
             default: return new TriangleWaveSun(sunSettings, simulatorSettings.invQuantity);
         }
+
     }
 
     private AbstractSetPoint getNewSetPoint(){
@@ -164,27 +174,11 @@ public class Controller {
         chart.createSymbolsProperty();
     }
 
-    private void setupUIElements(){
-        // Set up sliders
-        sliderPowerSetPoint.setValue(setPointSettings.baseSetPoint);
-        sliderPowerSetPoint.setMin(0.0);
-        sliderPowerSetPoint.setMax(simulatorSettings.invQuantity * inverterSettings.maxPower);
-        sliderPowerSetPoint.setShowTickLabels(true);
-        sliderPowerSetPoint.setShowTickMarks(true);
-        sliderPowerSetPoint.setMajorTickUnit(10);
-        sliderPowerSetPoint.setMinorTickCount(5);
-        sliderPowerSetPoint.setBlockIncrement(1);
+    private void setupSimulatorSettingsTab(){
+        setupSlider(sliderPowerSetPoint, 0.0, simulatorSettings.invQuantity * inverterSettings.maxPower,
+                setPointSettings.baseSetPoint);
+        setupSlider(sliderSimLength, 0.0, 60.0, simulatorSettings.simLength/secondsPerMinute);
 
-        sliderSimLength.setValue(simulatorSettings.simLength/secondsPerMinute);
-        sliderSimLength.setMin(0.0);
-        sliderSimLength.setMax(60);
-        sliderSimLength.setShowTickLabels(true);
-        sliderSimLength.setShowTickMarks(true);
-        sliderSimLength.setMajorTickUnit(10);
-        sliderSimLength.setMinorTickCount(5);
-        sliderSimLength.setBlockIncrement(1);
-
-        // Listen for slider value changes
         sliderPowerSetPoint.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable,
@@ -202,6 +196,41 @@ public class Controller {
                 simulatorSettings.simLength = Math.max((double)newValue, 1) * 60;
             }
         });
+    }
+
+    private void setupIrradianceSettingsTab(){
+
+        setupSlider(sliderIrrBaseLevel, 0.0, 1500.0, sunSettings.baseIrr);
+        setupSlider(sliderIrrRange, 0.0, 1000.0, sunSettings.range);
+        setupSlider(sliderIrrCycleTime, 0.0, 60.0, sunSettings.period/secondsPerMinute);
+
+        sliderIrrBaseLevel.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                sunSettings.baseIrr = (double)newValue;
+            }
+        });
+        sliderIrrRange.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                sunSettings.range = (double)newValue;
+            }
+        });
+        sliderIrrCycleTime.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                sunSettings.period = Math.max((double)newValue, 1) * secondsPerMinute;
+            }
+        });
+    }
+
+    private void setupSlider(Slider slider, double minValue, double maxValue, double defaultValue){
+        slider.setMin(minValue);
+        slider.setMax(maxValue);
+        slider.setValue(defaultValue);
+        slider.setShowTickLabels(true);
+        slider.setShowTickMarks(true);
+        slider.setMajorTickUnit((int) ((maxValue-minValue) / 4));
     }
 
 }
