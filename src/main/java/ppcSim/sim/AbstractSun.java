@@ -1,11 +1,8 @@
 package ppcSim.sim;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.Random;
-
-/**
- * Created by Josh on 10/5/16.
- */
 
 // Class created to provide irradiance values for each inverter
 public abstract class AbstractSun extends AbstractSimulationObject{
@@ -32,5 +29,14 @@ public abstract class AbstractSun extends AbstractSimulationObject{
 
     // Logic controlling irradiance levels to each inverter goes here
     public abstract double[] getIrradiance(double timeStamp);
+
+    protected double[] enforceIrradianceFloor(double[] irradiance){
+        for (int i = 0; i < irradiance.length; i++) {
+            if (irradiance[i]<0){
+                irradiance[i] = 0;
+            }
+        }
+        return irradiance;
+    }
 
 }

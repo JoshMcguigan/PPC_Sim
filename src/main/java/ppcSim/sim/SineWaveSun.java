@@ -34,6 +34,6 @@ public class SineWaveSun extends AbstractSun{
 
         irrAvg = DoubleStream.of(noiseyIrr).sum() / noiseyIrr.length;
 
-        return noiseyIrr;
+        return enforceIrradianceFloor(noiseyIrr);
     }
 }

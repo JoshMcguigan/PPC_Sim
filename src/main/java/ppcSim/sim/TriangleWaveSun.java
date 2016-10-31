@@ -51,6 +51,6 @@ public class TriangleWaveSun extends AbstractSun{
 
         irrAvg = DoubleStream.of(noiseyIrr).sum() / noiseyIrr.length;
 
-        return noiseyIrr;
+        return enforceIrradianceFloor(noiseyIrr);
     }
 }

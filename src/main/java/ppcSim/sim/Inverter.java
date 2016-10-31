@@ -30,7 +30,7 @@ public class Inverter {
 
         // It would be possible to add some dead time here, on either irradiance changes, set point changes, or both
 
-        if ( powerSetPoint > 100 || powerSetPoint < 0 ) {
+        if ( powerSetPoint > 100 || powerSetPoint < 0 || irr < 0) {
             throw new IllegalArgumentException("Power set point out of range");
         }
 
