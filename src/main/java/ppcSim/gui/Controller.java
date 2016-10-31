@@ -53,6 +53,11 @@ public class Controller {
     @FXML private Slider sliderSetPointCycleTime;
     @FXML private ChoiceBox choiceBoxSetPointPattern;
 
+    // Controller Settings
+    @FXML private Slider sliderControllerExecutionRate;
+    @FXML private Slider sliderControllerRampRate;
+    @FXML private Slider sliderControllerDeadBand;
+
 
     @FXML
     protected void initialize() {
@@ -67,6 +72,7 @@ public class Controller {
         setupSimulatorSettingsTab();
         setupIrradianceSettingsTab();
         setupSetPointSettingsTab();
+        setupControllerSettingsTab();
 
         runSim();
 
@@ -184,8 +190,8 @@ public class Controller {
 
     private void setupSimulatorSettingsTab(){
 
-        setupSlider(sliderSimLength, 0.0, 60.0, simulatorSettings.simLength/secondsPerMinute);
-        setupSlider(sliderSimStepSize, 0, 10, simulatorSettings.simStepSize);
+        setupSlider(sliderSimLength, 0.0, 60, simulatorSettings.simLength/secondsPerMinute);
+        setupSlider(sliderSimStepSize, 0, 5, simulatorSettings.simStepSize);
 
         sliderSimLength.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -260,13 +266,39 @@ public class Controller {
         });
     }
 
+    private void setupControllerSettingsTab(){
+
+        setupSlider(sliderControllerExecutionRate, 5, 30, controllerSettings.executionRate);
+        setupSlider(sliderControllerRampRate, 0, 50, controllerSettings.maxRampRate);
+        setupSlider(sliderControllerDeadBand, 0, 5, controllerSettings.deadBand);
+
+        sliderControllerExecutionRate.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                controllerSettings.executionRate = (double)newValue;
+            }
+        });
+        sliderControllerRampRate.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                controllerSettings.maxRampRate = Math.max((double)newValue, 1);
+            }
+        });
+        sliderControllerDeadBand.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                controllerSettings.deadBand = (double)newValue;
+            }
+        });
+    }
+
     private void setupSlider(Slider slider, double minValue, double maxValue, double defaultValue){
         slider.setMin(minValue);
         slider.setMax(maxValue);
         slider.setValue(defaultValue);
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
-        slider.setMajorTickUnit((int) ((maxValue-minValue) / 4));
+        slider.setMajorTickUnit(Math.max((int) ((maxValue-minValue) / 4), 1));
     }
 
 }
