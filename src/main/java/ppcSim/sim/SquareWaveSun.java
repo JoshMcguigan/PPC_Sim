@@ -51,7 +51,6 @@ public class SquareWaveSun extends AbstractSun{
             }
         }
 
-        irrAvg = DoubleStream.of(noiseyIrr).sum() / noiseyIrr.length;
 
         return enforceIrradianceFloor(noiseyIrr);
     }

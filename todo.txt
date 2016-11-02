@@ -5,22 +5,22 @@ Create settings classes and move device specific settings out of the simulation 
 Add a reset method to base level interface
 Consolidate controller class structure, make all controllers aware of timestamp for consistency
 
-create new method getIrradianceAverage rather than public property
+Create new sun type with a moving cloud
 
 Consider modifying simulation to allow stepping through externally
 and support for multiple controller types at once
 
-Add controller settings tab
+add inverter set point resolution settings (how many digits after the decimal place)
 
+Implement simulation analysis
+
+Implement method for testing a real controller
+
+Reconsider running multiple controllers with a single simulation instance so they all get the same irradiance
 
 Modify controller classes to start at set point of zero?
     or come up with some way to skip the first x minutes of simulation to allow "steady state"
-Add all simulation settings to GUI
-Test ppcSim.sim.ComplexController for set point step changes with relatively constant irradiance
-Implement simulation analysis
 Confirm set point outputs to each inverters varies over time, ensure set points equalize over time
 Implement ability to simulate inverters going offline (either just loss of comms but still producing or inverter turning completely off)
-Ability to interface with actual plant controller for testing and analysis
 Ability to use real irradiance values from an import file
-Repackage plant data to include array of plant data snapshots, plus controller type, sun type, set point type, etc
 Review access levels for simulation classes

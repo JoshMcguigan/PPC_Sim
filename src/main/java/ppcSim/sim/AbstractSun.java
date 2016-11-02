@@ -10,7 +10,6 @@ public abstract class AbstractSun extends AbstractSimulationObject{
     protected SunSettings settings;
 
     protected double[] irradiance;
-    protected double irrAvg;
     protected final Random randomizer;
 
     AbstractSun(SunSettings settings, int invQuantity){
@@ -20,8 +19,6 @@ public abstract class AbstractSun extends AbstractSimulationObject{
         this.settings = settings;
 
         randomizer = new Random();
-
-        irrAvg = settings.maxIrr;
 
         irradiance = new double[invQuantity];
         Arrays.fill(irradiance, settings.maxIrr);
