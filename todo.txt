@@ -7,12 +7,17 @@ Consolidate controller class structure, make all controllers aware of timestamp 
 
 Create new sun type with a moving cloud
 
-Consider modifying simulation to allow stepping through externally
+update analysis for more accurate integral
+Update analysis to display on GUI, create new controller for graphing / analysis tabs
+possibly move graphing functionality into analysis package
+do comparisons of results (in terms of %)
+
+create way to save and load settings
+
+Consider modifying simulation to allow stepping through externally or at a slower speed
 and support for multiple controller types at once
 
 add inverter set point resolution settings (how many digits after the decimal place)
-
-Implement simulation analysis
 
 Implement method for testing a real controller
 

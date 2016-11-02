@@ -11,6 +11,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 
+import ppcSim.analysis.Analyzer;
 import ppcSim.sim.*;
 
 import java.util.ArrayList;
@@ -120,6 +121,17 @@ public class Controller {
         System.out.println("Simulation complete");
 
         updateChart(simResults, controllerNames);
+
+        Analyzer analyzer = new Analyzer(simResults, 600);
+        double[] overProduction = analyzer.getGreatestInstantaneousOverProductionPerController();
+        double[] totalEnergy = analyzer.getTotalEnergyProductionPerController();
+        double[] totalEnergyMinusOverProduction = analyzer.getEnergyProductionNotIncludingOverProduction();
+
+        for (int i = 0; i < overProduction.length; i++) {
+            System.out.println("Controller: " + controllerNames[i] + ", Over Production: " + overProduction[i] +
+                    ", Total Energy: " + totalEnergy[i] + ", Total Energy Minus Over Production: " +
+                    totalEnergyMinusOverProduction[i]);
+        }
 
     }
 
