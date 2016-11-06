@@ -1,22 +1,41 @@
 package ppcSim.analysis;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import ppcSim.sim.PlantData;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class Analyzer {
 
     public static final int SECONDS_PER_HOUR = 3600;
 
     private final PlantData[][] simResults;
+    private final String[] controllerNames;
     private final int controllerQuantity;
-    private final double analysisStartTime;
+    private final double analysisStartTime; // Analysis start time in seconds
 
 
-    public Analyzer(PlantData[][] simResults, double analysisStartTime){
+    public Analyzer(PlantData[][] simResults, String[] controllerNames, double analysisStartTime){
 
         this.simResults = simResults;
+        this.controllerNames = controllerNames;
         controllerQuantity = simResults.length;
         this.analysisStartTime = analysisStartTime;
 
+    }
+
+    public ObservableList getAnalysisResults(){
+        double[] data = getEnergyProductionNotIncludingOverProduction();
+
+        List list = new ArrayList();
+
+        for (int i = 0; i < data.length; i++) {
+            list.add(new AnalysisResult(controllerNames[i], data[i]));
+        }
+
+        return FXCollections.observableList(list);
     }
 
 

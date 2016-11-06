@@ -11,6 +11,10 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Slider;
 
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.cell.PropertyValueFactory;
+import ppcSim.analysis.AnalysisResult;
 import ppcSim.analysis.Analyzer;
 import ppcSim.sim.*;
 
@@ -27,6 +31,8 @@ public class Controller {
     private ControllerSettings controllerSettings;
     private SetPointSettings setPointSettings;
 
+    private double analysisStartMinute = 5;
+
     private Simulator simulator;
     private AbstractSun sun;
     private AbstractSetPoint setPoint;
@@ -35,8 +41,6 @@ public class Controller {
     private Inverter[] inverters;
 
     private final int secondsPerMinute = 60;
-
-    @FXML private LineChart<Double, Double> chart;
 
     // Simulation Settings
     @FXML private Slider sliderSimLength;
@@ -59,6 +63,17 @@ public class Controller {
     @FXML private Slider sliderControllerRampRate;
     @FXML private Slider sliderControllerDeadBand;
 
+    // Analysis Settings
+    @FXML private Slider sliderAnalysisStartTime;
+
+    // Chart
+    @FXML private LineChart<Double, Double> chart;
+
+    // Analysis
+    @FXML private TableView tableViewAnalysis;
+    @FXML private TableColumn columnController;
+    @FXML private TableColumn columnTotalEnergyNotIncludingOverProduction;
+
 
     @FXML
     protected void initialize() {
@@ -74,11 +89,11 @@ public class Controller {
         setupIrradianceSettingsTab();
         setupSetPointSettingsTab();
         setupControllerSettingsTab();
+        setupAnalysisSettingsTab();
 
         runSim();
 
     }
-
 
 
     @FXML protected void runSim(ActionEvent event) {
@@ -121,17 +136,7 @@ public class Controller {
         System.out.println("Simulation complete");
 
         updateChart(simResults, controllerNames);
-
-        Analyzer analyzer = new Analyzer(simResults, 600);
-        double[] overProduction = analyzer.getGreatestInstantaneousOverProductionPerController();
-        double[] totalEnergy = analyzer.getTotalEnergyProductionPerController();
-        double[] totalEnergyMinusOverProduction = analyzer.getEnergyProductionNotIncludingOverProduction();
-
-        for (int i = 0; i < overProduction.length; i++) {
-            System.out.println("Controller: " + controllerNames[i] + ", Over Production: " + overProduction[i] +
-                    ", Total Energy: " + totalEnergy[i] + ", Total Energy Minus Over Production: " +
-                    totalEnergyMinusOverProduction[i]);
-        }
+        updateAnalysis(simResults, controllerNames);
 
     }
 
@@ -198,6 +203,19 @@ public class Controller {
         chart.setCreateSymbols(false);
         chart.setData(lineChartData);
         chart.createSymbolsProperty();
+    }
+
+    private void updateAnalysis (PlantData[][] plantData, String[] controllerNames){
+
+        Analyzer analyzer = new Analyzer(plantData, controllerNames, analysisStartMinute * secondsPerMinute);
+
+        tableViewAnalysis.setItems(analyzer.getAnalysisResults());
+        columnController.setCellValueFactory(
+                new PropertyValueFactory<AnalysisResult, String>("ControllerName"));
+        columnTotalEnergyNotIncludingOverProduction.setCellValueFactory(
+                new PropertyValueFactory<AnalysisResult, String>("TotalEnergyNotIncludingOverProduction"));
+
+
     }
 
     private void setupSimulatorSettingsTab(){
@@ -302,6 +320,19 @@ public class Controller {
                 controllerSettings.deadBand = (double)newValue;
             }
         });
+    }
+
+    private void setupAnalysisSettingsTab() {
+
+        setupSlider(sliderAnalysisStartTime, 0, 60, analysisStartMinute);
+
+        sliderAnalysisStartTime.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                analysisStartMinute = (double)newValue;
+            }
+        });
+
     }
 
     private void setupSlider(Slider slider, double minValue, double maxValue, double defaultValue){

@@ -16,7 +16,9 @@
 
     <TabPane GridPane.columnIndex="0" GridPane.rowIndex="0"
         tabClosingPolicy="UNAVAILABLE">
+
         <tabs>
+
             <Tab text="Simulation Settings">
                 <content>
                     <GridPane alignment="CENTER" hgap="20" vgap="10">
@@ -133,6 +135,17 @@
                 </content>
             </Tab>
 
+            <Tab text="Analysis Settings">
+                <content>
+                    <GridPane alignment="CENTER" hgap="20" vgap="10">
+                        <padding><Insets top="15" bottom="0"/></padding>
+                        <Label text="Analysis Start Minute"
+                               GridPane.columnIndex="0" GridPane.rowIndex="0"></Label>
+                        <Slider GridPane.columnIndex="0" GridPane.rowIndex="1"
+                                fx:id="sliderAnalysisStartTime"></Slider>
+                    </GridPane>
+                </content>
+            </Tab>
 
         </tabs>
     </TabPane>
@@ -141,14 +154,36 @@
             GridPane.columnIndex="1" GridPane.rowIndex="0"
             onAction="#runSim"/>
 
+    <TabPane GridPane.columnIndex="0" GridPane.rowIndex="1"
+             GridPane.columnSpan="2" tabClosingPolicy="UNAVAILABLE">
 
-    <LineChart
-            GridPane.columnIndex="0" GridPane.rowIndex="1"
-            GridPane.columnSpan="2"
-            fx:id="chart">
-        <xAxis><NumberAxis label="Time (Minutes)" lowerBound="0" upperBound="600" tickUnit="1"/></xAxis>
-        <yAxis><NumberAxis label="Plant Power Output (MW)" lowerBound="0" upperBound="40" tickUnit="1"/></yAxis>
-    </LineChart>
+        <tabs>
+
+            <Tab text="Chart">
+                <content>
+                    <LineChart fx:id="chart">
+                        <xAxis><NumberAxis label="Time (Minutes)" lowerBound="0" upperBound="600" tickUnit="1"/></xAxis>
+                        <yAxis><NumberAxis label="Plant Power Output (MW)" lowerBound="0" upperBound="40" tickUnit="1"/></yAxis>
+                    </LineChart>
+                </content>
+            </Tab>
+
+            <Tab text="Analysis">
+                <content>
+                    <TableView fx:id="tableViewAnalysis">
+                        <columns>
+                            <TableColumn text="Controller" fx:id="columnController"/>
+                            <TableColumn text="Total Energy Not Including Over Production (MWH)"
+                                         fx:id="columnTotalEnergyNotIncludingOverProduction" />
+                        </columns>
+                    </TableView>
+                </content>
+            </Tab>
+
+        </tabs>
+
+    </TabPane>
+
 
     <stylesheets>
         <URL value="@../CSS/PPC_Sim.css" />
