@@ -73,6 +73,10 @@ public class Controller {
     @FXML private TableView tableViewAnalysis;
     @FXML private TableColumn columnController;
     @FXML private TableColumn columnTotalEnergyNotIncludingOverProduction;
+    @FXML private TableColumn columnTotalEnergy;
+    @FXML private TableColumn columnGreatestInstantaneousOverProduction;
+
+
 
 
     @FXML
@@ -102,8 +106,6 @@ public class Controller {
 
     private void runSim(){
 
-        System.out.println("Simulation starting");
-
         // Create a list of controllers
         List<AbstractController> controllers = new ArrayList<>();
         controllers.add(new NaiveController(controllerSettings ,simulatorSettings.invQuantity, inverterSettings.maxPower));
@@ -132,8 +134,6 @@ public class Controller {
 
             controllerNames[i] = controller.getControllerName();
         }
-
-        System.out.println("Simulation complete");
 
         updateChart(simResults, controllerNames);
         updateAnalysis(simResults, controllerNames);
@@ -214,8 +214,10 @@ public class Controller {
                 new PropertyValueFactory<AnalysisResult, String>("ControllerName"));
         columnTotalEnergyNotIncludingOverProduction.setCellValueFactory(
                 new PropertyValueFactory<AnalysisResult, String>("TotalEnergyNotIncludingOverProduction"));
-
-
+        columnTotalEnergy.setCellValueFactory(
+                new PropertyValueFactory<AnalysisResult, String>("TotalEnergy"));
+        columnGreatestInstantaneousOverProduction.setCellValueFactory(
+                new PropertyValueFactory<AnalysisResult, String>("GreatestInstantaneousOverProduction"));
     }
 
     private void setupSimulatorSettingsTab(){

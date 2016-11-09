@@ -175,6 +175,10 @@
                             <TableColumn text="Controller" fx:id="columnController"/>
                             <TableColumn text="Total Energy Not Including Over Production (MWH)"
                                          fx:id="columnTotalEnergyNotIncludingOverProduction" />
+                            <TableColumn text="Total Energy (MWH)"
+                                         fx:id="columnTotalEnergy" />
+                            <TableColumn text="Instantaneous Over Production (MW)"
+                                         fx:id="columnGreatestInstantaneousOverProduction" />
                         </columns>
                     </TableView>
                 </content>
