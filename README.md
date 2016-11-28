@@ -1,5 +1,4 @@
 # PPC_Sim
-A very simple solar power plant controller simulator
 
 ![PPC Sim - Simulation Settings](https://cloud.githubusercontent.com/assets/22216761/19877705/c3c2748e-9f9e-11e6-8ccc-38e148be91cd.png)
 
