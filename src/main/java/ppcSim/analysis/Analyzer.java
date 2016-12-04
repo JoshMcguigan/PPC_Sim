@@ -2,7 +2,7 @@ package ppcSim.analysis;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import ppcSim.sim.PlantData;
+import ppcSim.sim.PlantDataInstant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,13 +11,13 @@ public class Analyzer {
 
     public static final int SECONDS_PER_HOUR = 3600;
 
-    private final PlantData[][] simResults;
+    private final PlantDataInstant[][] simResults;
     private final String[] controllerNames;
     private final int controllerQuantity;
     private final double analysisStartTime; // Analysis start time in seconds
 
 
-    public Analyzer(PlantData[][] simResults, String[] controllerNames, double analysisStartTime){
+    public Analyzer(PlantDataInstant[][] simResults, String[] controllerNames, double analysisStartTime){
 
         this.simResults = simResults;
         this.controllerNames = controllerNames;

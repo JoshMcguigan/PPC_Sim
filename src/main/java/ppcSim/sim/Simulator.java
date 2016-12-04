@@ -1,67 +1,47 @@
 package ppcSim.sim;
 
-import java.util.stream.DoubleStream;
-
 public class Simulator {
 
     public SimulatorSettings simulatorSettings;
 
     public AbstractSun sun;
     public AbstractSetPoint setPoint;
-    public AbstractController controller;
-    public Substation substation;
-    public Inverter[] inverters;
+    private PowerPlant[] powerPlants;
 
-    double[] powerSetPoints;
-    double[] invPower;
-
-    public Simulator(SimulatorSettings simulatorSettings, Substation substation, AbstractSun sun, AbstractSetPoint setPoint,
-                     AbstractController controller, Inverter[] inverters){
+    public Simulator(SimulatorSettings simulatorSettings, SubstationSettings substationSettings,
+                     AbstractSun sun, AbstractSetPoint setPoint,
+                     AbstractController[] controllers, InverterSettings inverterSettings){
 
         this.simulatorSettings = simulatorSettings;
-
-        this.substation = substation;
         this.sun = sun;
         this.setPoint = setPoint;
-        this.controller = controller;
-        this.inverters = inverters;
+
+        // Create a power plant object for each controller to be tested
+        this.powerPlants = new PowerPlant[controllers.length];
+        for (int i = 0; i < controllers.length; i++) {
+            powerPlants[i] = new PowerPlant(substationSettings, controllers[i], inverterSettings,
+                    simulatorSettings.invQuantity);
+        }
 
     }
 
-    public PlantData[] run(){
+    public SimResults run(){
 
-        int steps = getStepQuantity(simulatorSettings);
+        SimResults simResults = new SimResults(powerPlants.length);
 
-        PlantData[] plantData = new PlantData[steps];
-        int invQuantity = simulatorSettings.invQuantity;
+        double timeStamp = 0;
 
-        powerSetPoints = new double[invQuantity];
-        invPower = new double[invQuantity];
+        while (timeStamp < simulatorSettings.simLength) {
+            timeStamp += simulatorSettings.simStepSize;
+            double[] irradiance = sun.getIrradiance(timeStamp);
+            double plantSetPoint = setPoint.getSetPoint(timeStamp);
 
-        for (int i = 0; i < steps; i++) {
-            plantData[i] = step(i);
+            for (int i = 0; i < powerPlants.length; i++) {
+                simResults.putPlantDataInstant(i, powerPlants[i].step(timeStamp, irradiance, plantSetPoint)); ;
+            }
         }
 
-        return plantData;
-    }
-
-
-    private PlantData step(int currentStep){
-
-        double timeStamp = currentStep* simulatorSettings.simStepSize;
-        double[] irradiance = sun.getIrradiance(timeStamp);
-        double plantPowerSetPoint = setPoint.getSetPoint(timeStamp);
-
-        double avgIrr = DoubleStream.of(irradiance).sum() / irradiance.length;
-        double plantPower = substation.getPlantPower(invPower, timeStamp);
-        powerSetPoints = controller.getPowerSetPoints(plantPowerSetPoint, plantPower, invPower, timeStamp);
-
-        for (int i = 0; i < inverters.length; i++) {
-            invPower[i] = inverters[i].getPower(powerSetPoints[i], irradiance[i]);
-        }
-
-        return new PlantData(plantPowerSetPoint, avgIrr, powerSetPoints, invPower, plantPower, timeStamp);
-
+        return simResults;
     }
 
     public static int getStepQuantity(SimulatorSettings simulatorSettings){

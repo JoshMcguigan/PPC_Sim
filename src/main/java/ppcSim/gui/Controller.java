@@ -37,8 +37,6 @@ public class Controller {
     private AbstractSun sun;
     private AbstractSetPoint setPoint;
     private AbstractController controller;
-    private Substation substation;
-    private Inverter[] inverters;
 
     private final int secondsPerMinute = 60;
 
@@ -106,7 +104,6 @@ public class Controller {
 
     private void runSim(){
 
-        // Create a list of controllers
         List<AbstractController> controllers = new ArrayList<>();
         controllers.add(new NaiveController(controllerSettings ,simulatorSettings.invQuantity, inverterSettings.maxPower));
         controllers.add(new OpenLoopController(controllerSettings, simulatorSettings.invQuantity, inverterSettings.maxPower));
@@ -116,35 +113,30 @@ public class Controller {
                 inverterSettings.maxPower));
 
 
-        // Create 2d array to store results of simulation
-        // [controller][step]
-        int steps = Simulator.getStepQuantity(simulatorSettings);
         int controllerQuantity = controllers.size();
-        PlantData[][] simResults = new PlantData[controllerQuantity][steps];
+        SimResults simResults = new SimResults(controllerQuantity);
 
         // Run simulation once per controller
         String[] controllerNames = new String[controllerQuantity];
         for (int i = 0; i < controllerQuantity; i++) {
 
-            resetSimInstances();
             controller = controllers.get(i);
 
-            simulator = new Simulator(simulatorSettings, substation, sun, setPoint, controller, inverters);
-            simResults[i] = simulator.run();
 
             controllerNames[i] = controller.getControllerName();
         }
 
-        updateChart(simResults, controllerNames);
-        updateAnalysis(simResults, controllerNames);
-
-    }
-
-    private void resetSimInstances(){
         sun = getNewSun();
         setPoint = getNewSetPoint();
-        substation = new Substation(substationSettings);
-        inverters = Inverter.getArray(inverterSettings, simulatorSettings.invQuantity);
+
+        simulator = new Simulator(simulatorSettings, substationSettings, sun, setPoint,
+                controllers.toArray(new AbstractController[controllers.size()]), inverterSettings);
+
+        simResults = simulator.run();
+
+        updateChart(simResults.getPlantDataAsArray(), controllerNames);
+        updateAnalysis(simResults.getPlantDataAsArray(), controllerNames);
+
     }
 
     private AbstractSun getNewSun(){
@@ -170,19 +162,19 @@ public class Controller {
         }
     }
 
-    private void updateChart (PlantData[][] plantData, String[] controllerNames){
+    private void updateChart (PlantDataInstant[][] plantDataInstant, String[] controllerNames){
 
         ObservableList<XYChart.Series<Double, Double>> lineChartData = FXCollections.observableArrayList();
 
         // Create plant output data sets
-        for (int controller = 0; controller < plantData.length; controller++) {
+        for (int controller = 0; controller < plantDataInstant.length; controller++) {
 
             LineChart.Series<Double,Double> plantOutput = new LineChart.Series<Double, Double>();
             plantOutput.setName(controllerNames[controller]);
 
-            for (int i = 0; i < plantData[controller].length; i++) {
-                Double x = plantData[0][i].timeStamp / secondsPerMinute;
-                Double y = plantData[controller][i].plantPowerOutput;
+            for (int i = 0; i < plantDataInstant[controller].length; i++) {
+                Double x = plantDataInstant[0][i].timeStamp / secondsPerMinute;
+                Double y = plantDataInstant[controller][i].plantPowerOutput;
                 plantOutput.getData().add(new XYChart.Data<Double,Double>(x,y));
             }
 
@@ -192,9 +184,9 @@ public class Controller {
         // Create set point data set
         LineChart.Series<Double, Double> setPoint = new LineChart.Series<Double, Double>();
         setPoint.setName("Set Point");
-        for (int i = 0; i < plantData[0].length; i++) {
-            Double x = plantData[0][i].timeStamp / secondsPerMinute;
-            Double y = plantData[0][i].plantSetPoint;
+        for (int i = 0; i < plantDataInstant[0].length; i++) {
+            Double x = plantDataInstant[0][i].timeStamp / secondsPerMinute;
+            Double y = plantDataInstant[0][i].plantSetPoint;
             setPoint.getData().add(new XYChart.Data<Double,Double>(x,y));
         }
         lineChartData.add(setPoint);
@@ -205,9 +197,9 @@ public class Controller {
         chart.createSymbolsProperty();
     }
 
-    private void updateAnalysis (PlantData[][] plantData, String[] controllerNames){
+    private void updateAnalysis (PlantDataInstant[][] plantDataInstant, String[] controllerNames){
 
-        Analyzer analyzer = new Analyzer(plantData, controllerNames, analysisStartMinute * secondsPerMinute);
+        Analyzer analyzer = new Analyzer(plantDataInstant, controllerNames, analysisStartMinute * secondsPerMinute);
 
         tableViewAnalysis.setItems(analyzer.getAnalysisResults());
         columnController.setCellValueFactory(

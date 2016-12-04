@@ -1,31 +1,9 @@
-Clean up class tree
-Make interfaces where they should be
-Make every simulation object based on one standard object, which has the concept of timestamp and that logic
-Create settings classes and move device specific settings out of the simulation settings class
-Add a reset method to base level interface
-Consolidate controller class structure, make all controllers aware of timestamp for consistency
-
-Create new sun type with a moving cloud
-
-update analysis for more accurate integral
-Update analysis to display on GUI, create new controller for graphing / analysis tabs
-possibly move graphing functionality into analysis package
-do comparisons of results (in terms of %)
-
-create way to save and load settings
-
-Consider modifying simulation to allow stepping through externally or at a slower speed
-and support for multiple controller types at once
-
-add inverter set point resolution settings (how many digits after the decimal place)
-
-Implement method for testing a real controller
-
-Reconsider running multiple controllers with a single simulation instance so they all get the same irradiance
-
-Modify controller classes to start at set point of zero?
-    or come up with some way to skip the first x minutes of simulation to allow "steady state"
-Confirm set point outputs to each inverters varies over time, ensure set points equalize over time
-Implement ability to simulate inverters going offline (either just loss of comms but still producing or inverter turning completely off)
-Ability to use real irradiance values from an import file
 Review access levels for simulation classes
+fix issue with controller update rate faster than simulation update rate
+add inverter dead time and ramp rates (on set point and irradiance changes)
+update GUI to use new plant data types and remove conversion to nested array within SimResults class
+update GUI to use separate controllers for different UI parts
+implement realtime simulation and allow settings changes during sim
+implement Modbus controller type
+implement ability to simulate inverters going offline
+add ability to use real irradiance values from import file

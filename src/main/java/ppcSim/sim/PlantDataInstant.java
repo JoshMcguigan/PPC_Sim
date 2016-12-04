@@ -1,9 +1,6 @@
 package ppcSim.sim;
 
-/**
- * Created by Josh on 10/6/16.
- */
-public class PlantData {
+public class PlantDataInstant {
     public final double plantSetPoint;
     public final double avgIrr;
     public final double[] invPowerSetPoint;
@@ -12,7 +9,7 @@ public class PlantData {
     public final double timeStamp;
 
 
-    public PlantData(double plantSetPoint, double avgIrr, double[] invPowerSetPoint, double[] invPowerOutput, double plantPowerOutput, double timeStamp) {
+    public PlantDataInstant(double plantSetPoint, double avgIrr, double[] invPowerSetPoint, double[] invPowerOutput, double plantPowerOutput, double timeStamp) {
         this.plantSetPoint = plantSetPoint;
         this.avgIrr = avgIrr;
         this.invPowerSetPoint = invPowerSetPoint;
