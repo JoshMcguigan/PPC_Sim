@@ -16,7 +16,7 @@ public class ProportionalStepController extends AbstractTimeBasedController {
     }
 
 
-    public double[] executeController(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
+    double[] executeController(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
 
         // If error is within deadband, control action stays constant
         if (Math.abs(plantPowerSetPoint - currentPlantPower) > settings.deadBand || (currentPlantPower>plantPowerSetPoint)) {

@@ -1,7 +1,5 @@
 package ppcSim.sim;
 
-import java.util.stream.DoubleStream;
-
 public class TriangleWaveSun extends AbstractSun{
 
     private double changeRate; // rate of change, in units of (W/m^2)/sec
@@ -20,7 +18,7 @@ public class TriangleWaveSun extends AbstractSun{
     }
 
     @Override
-    public double[] getIrradiance(double timeStamp){
+    double[] getIrradiance(double timeStamp){
 
         double timeDelta = getTimeDeltaAndUpdateTimeStamp(timeStamp);
 

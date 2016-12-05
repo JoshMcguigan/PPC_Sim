@@ -1,6 +1,6 @@
 package ppcSim.sim;
 
-public class AbstractSimulationObject {
+class AbstractSimulationObject {
     protected double lastSimTime; // Stores the timestamp of the last simulation execution
 
     AbstractSimulationObject(){

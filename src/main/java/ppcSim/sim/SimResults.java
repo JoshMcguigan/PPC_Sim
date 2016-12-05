@@ -5,11 +5,15 @@ import java.util.List;
 
 public class SimResults {
     private List<List<PlantDataInstant>> simResults;
+    private String[] controllerNames;
 
-    public SimResults(int controllerQuantity){
+    SimResults(String[] controllerNames){
+
+        this.controllerNames = controllerNames;
+
         simResults = new ArrayList<List<PlantDataInstant>>();
 
-        for (int i = 0; i < controllerQuantity; i++) {
+        for (int i = 0; i < controllerNames.length; i++) {
             simResults.add(new ArrayList<PlantDataInstant>());
         }
     }
@@ -23,6 +27,10 @@ public class SimResults {
                 .map(l -> l.stream().toArray(PlantDataInstant[]::new))
                 .toArray(PlantDataInstant[][]::new);
         return array;
+    }
+
+    public String[] getControllerNames(){
+        return controllerNames;
     }
 
     void putPlantDataInstant(int controller, PlantDataInstant plantDataInstant){

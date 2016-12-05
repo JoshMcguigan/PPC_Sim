@@ -10,7 +10,7 @@ public class NaiveController extends AbstractController {
     }
 
 
-    public double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
+    double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
 
         // Simply sets max power output to all inverters
         Arrays.fill(powerSetPoints, maxPowerSetPoint);

@@ -1,7 +1,5 @@
 package ppcSim.sim;
 
-import java.util.stream.DoubleStream;
-
 public class SquareWaveSun extends AbstractSun{
 
     private double timeLastSwitch; // time stamp of simulation last time state was changed
@@ -25,7 +23,7 @@ public class SquareWaveSun extends AbstractSun{
     }
 
     @Override
-    public double[] getIrradiance(double timeStamp){
+    double[] getIrradiance(double timeStamp){
 
         if ( timeStamp > (timeLastSwitch + switchTime) ){
 

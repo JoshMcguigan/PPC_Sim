@@ -10,7 +10,7 @@ public class OpenLoopController extends AbstractTimeBasedController{
         super(settings, invQuantity, invPowerMax);
     }
 
-    public double[] executeController(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
+    double[] executeController(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
 
         calculateRampedPlantPowerSetPoint(plantPowerSetPoint);
 

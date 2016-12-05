@@ -2,10 +2,10 @@ package ppcSim.sim;
 
 public class Simulator {
 
-    public SimulatorSettings simulatorSettings;
+    private SimulatorSettings simulatorSettings;
 
-    public AbstractSun sun;
-    public AbstractSetPoint setPoint;
+    private AbstractSun sun;
+    private AbstractSetPoint setPoint;
     private PowerPlant[] powerPlants;
 
     public Simulator(SimulatorSettings simulatorSettings, SubstationSettings substationSettings,
@@ -27,7 +27,13 @@ public class Simulator {
 
     public SimResults run(){
 
-        SimResults simResults = new SimResults(powerPlants.length);
+        int controllerQuantity = powerPlants.length;
+        String[] controllerNames = new String[controllerQuantity];
+        for (int i = 0; i < controllerQuantity; i++) {
+            controllerNames[i] = powerPlants[i].getControllerName();
+        }
+
+        SimResults simResults = new SimResults(controllerNames);
 
         double timeStamp = 0;
 
@@ -44,7 +50,4 @@ public class Simulator {
         return simResults;
     }
 
-    public static int getStepQuantity(SimulatorSettings simulatorSettings){
-        return (int)(simulatorSettings.simLength/simulatorSettings.simStepSize);
-    }
 }

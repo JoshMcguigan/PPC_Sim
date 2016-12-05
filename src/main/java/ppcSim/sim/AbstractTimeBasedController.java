@@ -1,7 +1,7 @@
 package ppcSim.sim;
 
 
-public abstract class AbstractTimeBasedController extends AbstractController {
+abstract class AbstractTimeBasedController extends AbstractController {
 
     protected ControllerSettings settings;
 
@@ -21,7 +21,7 @@ public abstract class AbstractTimeBasedController extends AbstractController {
 
     }
 
-    public double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
+    double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
 
         if (timeStamp >= lastExecutionTime + settings.executionRate ) {
 
@@ -35,6 +35,6 @@ public abstract class AbstractTimeBasedController extends AbstractController {
 
     }
 
-    public abstract double[] executeController(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp);
+    abstract double[] executeController(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp);
 
 }

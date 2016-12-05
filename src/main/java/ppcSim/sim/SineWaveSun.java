@@ -1,7 +1,5 @@
 package ppcSim.sim;
 
-import java.util.stream.DoubleStream;
-
 public class SineWaveSun extends AbstractSun{
 
     private double irradiance;
@@ -17,7 +15,7 @@ public class SineWaveSun extends AbstractSun{
     }
 
     @Override
-    public double[] getIrradiance(double timeStamp){
+    double[] getIrradiance(double timeStamp){
 
         irradiance = settings.baseIrr + settings.range * Math.sin(timeStamp * (2*Math.PI) / settings.period);
 

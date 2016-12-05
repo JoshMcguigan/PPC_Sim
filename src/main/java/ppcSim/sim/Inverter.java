@@ -3,13 +3,13 @@ package ppcSim.sim;
 import java.util.Arrays;
 import java.util.Random;
 
-public class Inverter {
+class Inverter {
 
     private InverterSettings settings;
 
     private final Random randomizer;
 
-    public Inverter(InverterSettings settings){
+    private Inverter(InverterSettings settings){
 
         this.settings = settings;
 
@@ -17,14 +17,14 @@ public class Inverter {
 
     }
 
-    public static Inverter[] getArray(InverterSettings settings, int inverterQuantity){
+    static Inverter[] getArray(InverterSettings settings, int inverterQuantity){
         Inverter[] inverterArray = new Inverter[inverterQuantity];
         Arrays.fill(inverterArray, new Inverter(settings));
 
         return inverterArray;
     }
 
-    public double getPower(double powerSetPoint, double irr){
+    double getPower(double powerSetPoint, double irr){
         // powerSetPoint specifies maximum power output, as a percent of maxPower
         // irr is current irradiance in W/m^2
 

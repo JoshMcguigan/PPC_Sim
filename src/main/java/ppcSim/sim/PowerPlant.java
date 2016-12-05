@@ -2,11 +2,11 @@ package ppcSim.sim;
 
 import java.util.stream.DoubleStream;
 
-public class PowerPlant {
+class PowerPlant {
 
-    private AbstractController controller;
-    private Substation substation;
-    private Inverter[] inverters;
+    private final AbstractController controller;
+    private final Substation substation;
+    private final Inverter[] inverters;
 
     private double[] powerSetPoints;
     private double[] invPower;
@@ -36,6 +36,10 @@ public class PowerPlant {
 
         return new PlantDataInstant(plantPowerSetPoint, avgIrr, powerSetPoints, invPower, plantPower, timeStamp);
 
+    }
+
+    String getControllerName(){
+        return controller.getControllerName();
     }
 
 }

@@ -19,7 +19,7 @@ public class SquareWaveSetPoint extends AbstractSetPoint {
     }
 
     @Override
-    public double getSetPoint(double timeStamp) {
+    double getSetPoint(double timeStamp) {
 
         if ( timeStamp > (timeLastSwitch + switchTime) ){
 

@@ -8,5 +8,5 @@ public abstract class AbstractSetPoint extends AbstractSimulationObject{
         this.settings = settings;
     }
 
-    public abstract double getSetPoint(double timeStamp);
+    abstract double getSetPoint(double timeStamp);
 }

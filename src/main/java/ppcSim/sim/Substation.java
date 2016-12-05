@@ -5,20 +5,20 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.stream.*;
 
-public class Substation {
+class Substation {
 
     private SubstationSettings settings;
 
     private Map<Double,Double> dataStore; // Stores <timeStamp, calculated plant power>
 
-    public Substation(SubstationSettings settings){
+    Substation(SubstationSettings settings){
 
         this.settings = settings;
 
         dataStore = new HashMap<Double,Double>();
     }
 
-    public double getPlantPower(double[] invPower, double timeStamp){
+    double getPlantPower(double[] invPower, double timeStamp){
 
         // Store the data
         dataStore.put(timeStamp, DoubleStream.of(invPower).sum());

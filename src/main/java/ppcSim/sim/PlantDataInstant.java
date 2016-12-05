@@ -9,7 +9,7 @@ public class PlantDataInstant {
     public final double timeStamp;
 
 
-    public PlantDataInstant(double plantSetPoint, double avgIrr, double[] invPowerSetPoint, double[] invPowerOutput, double plantPowerOutput, double timeStamp) {
+    PlantDataInstant(double plantSetPoint, double avgIrr, double[] invPowerSetPoint, double[] invPowerOutput, double plantPowerOutput, double timeStamp) {
         this.plantSetPoint = plantSetPoint;
         this.avgIrr = avgIrr;
         this.invPowerSetPoint = invPowerSetPoint;

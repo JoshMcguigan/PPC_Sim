@@ -112,19 +112,7 @@ public class Controller {
         controllers.add(new ComplexController(controllerSettings, simulatorSettings.invQuantity,
                 inverterSettings.maxPower));
 
-
-        int controllerQuantity = controllers.size();
-        SimResults simResults = new SimResults(controllerQuantity);
-
-        // Run simulation once per controller
-        String[] controllerNames = new String[controllerQuantity];
-        for (int i = 0; i < controllerQuantity; i++) {
-
-            controller = controllers.get(i);
-
-
-            controllerNames[i] = controller.getControllerName();
-        }
+        SimResults simResults;
 
         sun = getNewSun();
         setPoint = getNewSetPoint();
@@ -134,8 +122,8 @@ public class Controller {
 
         simResults = simulator.run();
 
-        updateChart(simResults.getPlantDataAsArray(), controllerNames);
-        updateAnalysis(simResults.getPlantDataAsArray(), controllerNames);
+        updateChart(simResults.getPlantDataAsArray(), simResults.getControllerNames());
+        updateAnalysis(simResults.getPlantDataAsArray(), simResults.getControllerNames());
 
     }
 

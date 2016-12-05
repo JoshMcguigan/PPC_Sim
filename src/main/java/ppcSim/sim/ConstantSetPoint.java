@@ -8,7 +8,7 @@ public class ConstantSetPoint extends AbstractSetPoint {
     }
 
     @Override
-    public double getSetPoint(double timeStamp) {
+    double getSetPoint(double timeStamp) {
         return settings.baseSetPoint;
     }
 
