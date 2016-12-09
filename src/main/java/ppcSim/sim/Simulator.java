@@ -1,5 +1,8 @@
 package ppcSim.sim;
 
+import javafx.application.Platform;
+import ppcSim.gui.guiUpdateRunnable;
+
 public class Simulator {
 
     private SimulatorSettings simulatorSettings;
@@ -25,7 +28,7 @@ public class Simulator {
 
     }
 
-    public SimResults run(){
+    public SimResults run(guiUpdateRunnable callback){
 
         int controllerQuantity = powerPlants.length;
         String[] controllerNames = new String[controllerQuantity];
@@ -38,6 +41,7 @@ public class Simulator {
         double timeStamp = 0;
 
         while (timeStamp < simulatorSettings.simLength) {
+
             timeStamp += simulatorSettings.simStepSize;
             double[] irradiance = sun.getIrradiance(timeStamp);
             double plantSetPoint = setPoint.getSetPoint(timeStamp);
@@ -45,7 +49,22 @@ public class Simulator {
             for (int i = 0; i < powerPlants.length; i++) {
                 simResults.putPlantDataInstant(i, powerPlants[i].step(timeStamp, irradiance, plantSetPoint)); ;
             }
+
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            Platform.runLater(new Runnable() {
+                @Override
+                public void run() {
+                    callback.run(simResults);
+                }
+            });
+
         }
+
 
         return simResults;
     }

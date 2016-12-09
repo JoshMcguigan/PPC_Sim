@@ -1,4 +1,4 @@
-Review access levels for simulation classes
+complex controller should attempt to balance out inverter set points when ramping down by choosing highest set point inverters first to ramp
 fix issue with controller update rate faster than simulation update rate
 add inverter dead time and ramp rates (on set point and irradiance changes)
 update GUI to use new plant data types and remove conversion to nested array within SimResults class
@@ -6,4 +6,5 @@ update GUI to use separate controllers for different UI parts
 implement realtime simulation and allow settings changes during sim
 implement Modbus controller type
 implement ability to simulate inverters going offline
+implement / test simulation with different size inverters
 add ability to use real irradiance values from import file

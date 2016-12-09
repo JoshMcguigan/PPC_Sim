@@ -36,7 +36,6 @@ public class Controller {
     private Simulator simulator;
     private AbstractSun sun;
     private AbstractSetPoint setPoint;
-    private AbstractController controller;
 
     private final int secondsPerMinute = 60;
 
@@ -112,18 +111,22 @@ public class Controller {
         controllers.add(new ComplexController(controllerSettings, simulatorSettings.invQuantity,
                 inverterSettings.maxPower));
 
-        SimResults simResults;
-
         sun = getNewSun();
         setPoint = getNewSetPoint();
 
         simulator = new Simulator(simulatorSettings, substationSettings, sun, setPoint,
                 controllers.toArray(new AbstractController[controllers.size()]), inverterSettings);
 
-        simResults = simulator.run();
+        new Thread(() -> simulator.run(new guiUpdateRunnable() {
+            @Override
+            public void run(SimResults simResults) {
+                updateChart(simResults.getPlantDataAsArray(), simResults.getControllerNames());
+                updateAnalysis(simResults.getPlantDataAsArray(), simResults.getControllerNames());
+            }
+        })).start();
 
-        updateChart(simResults.getPlantDataAsArray(), simResults.getControllerNames());
-        updateAnalysis(simResults.getPlantDataAsArray(), simResults.getControllerNames());
+
+
 
     }
 
