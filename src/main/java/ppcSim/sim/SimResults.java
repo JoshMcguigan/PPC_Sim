@@ -22,6 +22,10 @@ public class SimResults {
         return simResults.get(controller).get(step);
     }
 
+    public int getPlantDataSize(int controller){
+        return simResults.get(controller).size();
+    }
+
     public PlantDataInstant[][] getPlantDataAsArray(){
         PlantDataInstant[][] array = simResults.stream()
                 .map(l -> l.stream().toArray(PlantDataInstant[]::new))

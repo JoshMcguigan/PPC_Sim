@@ -120,7 +120,7 @@ public class Controller {
         new Thread(() -> simulator.run(new guiUpdateRunnable() {
             @Override
             public void run(SimResults simResults) {
-                updateChart(simResults.getPlantDataAsArray(), simResults.getControllerNames());
+                updateChart(simResults);
                 updateAnalysis(simResults.getPlantDataAsArray(), simResults.getControllerNames());
             }
         })).start();
@@ -153,19 +153,21 @@ public class Controller {
         }
     }
 
-    private void updateChart (PlantDataInstant[][] plantDataInstant, String[] controllerNames){
+    private void updateChart (SimResults simResults){
+
+        String[] controllerNames = simResults.getControllerNames();
 
         ObservableList<XYChart.Series<Double, Double>> lineChartData = FXCollections.observableArrayList();
 
         // Create plant output data sets
-        for (int controller = 0; controller < plantDataInstant.length; controller++) {
+        for (int controller = 0; controller < controllerNames.length; controller++) {
 
             LineChart.Series<Double,Double> plantOutput = new LineChart.Series<Double, Double>();
             plantOutput.setName(controllerNames[controller]);
 
-            for (int i = 0; i < plantDataInstant[controller].length; i++) {
-                Double x = plantDataInstant[0][i].timeStamp / secondsPerMinute;
-                Double y = plantDataInstant[controller][i].plantPowerOutput;
+            for (int i = 0; i < simResults.getPlantDataSize(controller); i++) {
+                Double x = simResults.getPlantData(controller,i).timeStamp / secondsPerMinute;
+                Double y = simResults.getPlantData(controller,i).plantPowerOutput;
                 plantOutput.getData().add(new XYChart.Data<Double,Double>(x,y));
             }
 
@@ -175,9 +177,9 @@ public class Controller {
         // Create set point data set
         LineChart.Series<Double, Double> setPoint = new LineChart.Series<Double, Double>();
         setPoint.setName("Set Point");
-        for (int i = 0; i < plantDataInstant[0].length; i++) {
-            Double x = plantDataInstant[0][i].timeStamp / secondsPerMinute;
-            Double y = plantDataInstant[0][i].plantSetPoint;
+        for (int i = 0; i < simResults.getPlantDataSize(0); i++) {
+            Double x = simResults.getPlantData(0,i).timeStamp / secondsPerMinute;
+            Double y = simResults.getPlantData(0,i).plantSetPoint;
             setPoint.getData().add(new XYChart.Data<Double,Double>(x,y));
         }
         lineChartData.add(setPoint);

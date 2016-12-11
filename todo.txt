@@ -1,3 +1,4 @@
+convert analysis tools to use new sim results format
 complex controller should attempt to balance out inverter set points when ramping down by choosing highest set point inverters first to ramp
 fix issue with controller update rate faster than simulation update rate
 add inverter dead time and ramp rates (on set point and irradiance changes)
