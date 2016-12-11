@@ -104,11 +104,15 @@ public class Controller {
     private void runSim(){
 
         List<AbstractController> controllers = new ArrayList<>();
-        controllers.add(new NaiveController(controllerSettings ,simulatorSettings.invQuantity, inverterSettings.maxPower));
-        controllers.add(new OpenLoopController(controllerSettings, simulatorSettings.invQuantity, inverterSettings.maxPower));
+        controllers.add(new NaiveController(controllerSettings ,simulatorSettings.invQuantity,
+                inverterSettings.maxPower));
+        controllers.add(new OpenLoopController(controllerSettings, simulatorSettings.invQuantity,
+                inverterSettings.maxPower));
         controllers.add(new ProportionalStepController(controllerSettings, simulatorSettings.invQuantity,
                 inverterSettings.maxPower));
         controllers.add(new ComplexController(controllerSettings, simulatorSettings.invQuantity,
+                inverterSettings.maxPower));
+        controllers.add(new ModbusClientController(controllerSettings, simulatorSettings.invQuantity,
                 inverterSettings.maxPower));
 
         sun = getNewSun();

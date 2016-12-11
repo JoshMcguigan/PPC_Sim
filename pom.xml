@@ -45,7 +45,11 @@
 
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.digitalpetri.modbus</groupId>
+            <artifactId>modbus-slave-tcp</artifactId>
+            <version>1.0.2</version>
+        </dependency>
     </dependencies>
 
 </project>
