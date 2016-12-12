@@ -121,7 +121,7 @@ public class Controller {
         simulator = new Simulator(simulatorSettings, substationSettings, sun, setPoint,
                 controllers.toArray(new AbstractController[controllers.size()]), inverterSettings);
 
-        new Thread(() -> simulator.run(new guiUpdateRunnable() {
+        new Thread(() -> simulator.runAsync(new guiUpdateRunnable() {
             @Override
             public void run(SimResults simResults) {
                 updateChart(simResults);

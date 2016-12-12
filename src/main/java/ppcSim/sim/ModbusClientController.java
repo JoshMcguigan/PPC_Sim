@@ -1,7 +1,5 @@
 package ppcSim.sim;
 
-// Sets up a Modbus server to be used for testing power plant controllers which act as Modbus clients
-
 import com.digitalpetri.modbus.ExceptionCode;
 import com.digitalpetri.modbus.requests.ReadHoldingRegistersRequest;
 import com.digitalpetri.modbus.requests.WriteMultipleRegistersRequest;
@@ -16,15 +14,22 @@ import io.netty.buffer.ByteBuf;
 import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.util.ReferenceCountUtil;
 
-import java.util.Arrays;
 import java.util.concurrent.ExecutionException;
 
+// Sets up a Modbus server to be used for testing power plant controllers which act as Modbus clients
 public class ModbusClientController extends AbstractController{
 
     private final ModbusTcpSlaveConfig config = new ModbusTcpSlaveConfig.Builder().build();
     private final ModbusTcpSlave slave = new ModbusTcpSlave(config);
 
     private short[] modbusTable;
+    /*
+    Modbus Table (where N = inverter quantity):
+    Registers 1->N: Inverter set point %
+    Registers 101->1NN: Inverter power output KW
+    Register 301: Plant power set point KW
+    Register 302: Plant power output KW
+     */
 
     public ModbusClientController(ControllerSettings settings, int invQuantity, double invPowerMax) {
         super(invQuantity, invPowerMax);
@@ -36,8 +41,14 @@ public class ModbusClientController extends AbstractController{
 
     double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
 
-        // Simply sets max power output to all inverters
-        Arrays.fill(powerSetPoints, modbusTable[0]);
+        for (int i = 0; i < invQuantity; i++) {
+            powerSetPoints[i] = modbusTable[i];
+
+            modbusTable[100+i] = (short) (currentInverterPower[i] * 1000);
+        }
+
+        modbusTable[300] = (short) (plantPowerSetPoint * 1000);
+        modbusTable[301] = (short) (currentPlantPower * 1000);
 
         return powerSetPoints;
     }

@@ -28,7 +28,7 @@ public class Simulator {
 
     }
 
-    public SimResults run(guiUpdateRunnable callback){
+    public SimResults runAsync(guiUpdateRunnable callback){
 
         int controllerQuantity = powerPlants.length;
         String[] controllerNames = new String[controllerQuantity];
@@ -68,7 +68,7 @@ public class Simulator {
         return simResults;
     }
 
-    public SimResults runAsync(){
+    public SimResults run(){
         int controllerQuantity = powerPlants.length;
         String[] controllerNames = new String[controllerQuantity];
 
