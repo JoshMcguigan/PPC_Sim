@@ -3,8 +3,9 @@ package ppcSim.sim;
 public class SimulatorSettings {
 
     public int invQuantity = 20; // quantity of inverters in simulation
-    public double simLength = 600; // simulation time in seconds
-    public double simStepSize = 0.5; // simulation step size in seconds
+    public double simRate = 1; // rate at which the simulation runs
+    public boolean simPause = false;
+    public boolean simStop = false;
 
     public SimulatorSettings(){
 

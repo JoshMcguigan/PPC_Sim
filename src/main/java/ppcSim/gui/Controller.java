@@ -40,8 +40,7 @@ public class Controller {
     private final int secondsPerMinute = 60;
 
     // Simulation Settings
-    @FXML private Slider sliderSimLength;
-    @FXML private Slider sliderSimStepSize;
+
 
     // Irradiance Settings
     @FXML private Slider sliderIrrBaseLevel;
@@ -92,14 +91,22 @@ public class Controller {
         setupControllerSettingsTab();
         setupAnalysisSettingsTab();
 
-        runSim();
-
     }
 
 
-    @FXML protected void runSim(ActionEvent event) {
+    @FXML protected void buttonPlay(ActionEvent event) {
         runSim();
     }
+
+    @FXML protected void buttonPause(ActionEvent event) {
+        simulatorSettings.simPause = !simulatorSettings.simPause;
+    }
+
+    @FXML protected void buttonStop(ActionEvent event) {
+        simulatorSettings.simStop = !simulatorSettings.simStop;
+    }
+
+    @FXML protected void buttonFastForward(ActionEvent event) { simulatorSettings.simRate *= 2; }
 
     private void runSim(){
 
@@ -211,24 +218,6 @@ public class Controller {
 
     private void setupSimulatorSettingsTab(){
 
-        setupSlider(sliderSimLength, 0.0, 60, simulatorSettings.simLength/secondsPerMinute);
-        setupSlider(sliderSimStepSize, 0, 5, simulatorSettings.simStepSize);
-
-        sliderSimLength.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable,
-                                Number oldValue, Number newValue) {
-
-                // Allow sim length down to 1 minute only
-                simulatorSettings.simLength = Math.max((double)newValue, 1) * 60;
-            }
-        });
-        sliderSimStepSize.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                simulatorSettings.simStepSize = Math.max((double)newValue, 0.5);
-            }
-        });
     }
 
     private void setupIrradianceSettingsTab(){

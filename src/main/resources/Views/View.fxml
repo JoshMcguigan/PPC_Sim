@@ -24,14 +24,21 @@
                     <GridPane alignment="CENTER" hgap="20" vgap="10">
                         <padding><Insets top="15" bottom="0"/></padding>
 
-                        <Label text="Simulation Length (Minutes)"
-                               GridPane.columnIndex="0" GridPane.rowIndex="0"></Label>
-                        <Slider GridPane.columnIndex="0" GridPane.rowIndex="1"
-                                fx:id="sliderSimLength"></Slider>
-                        <Label text="Simulation Step Size (Seconds)"
-                               GridPane.columnIndex="1" GridPane.rowIndex="0"></Label>
-                        <Slider GridPane.columnIndex="1" GridPane.rowIndex="1"
-                                fx:id="sliderSimStepSize"></Slider>
+                        <Button fx:id="buttonPlay"
+                                GridPane.columnIndex="0" GridPane.rowIndex="0"
+                                onAction="#buttonPlay"/>
+
+                        <Button fx:id="buttonPause"
+                                GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                onAction="#buttonPause"/>
+
+                        <Button fx:id="buttonStop"
+                                GridPane.columnIndex="2" GridPane.rowIndex="0"
+                                onAction="#buttonStop"/>
+
+                        <Button fx:id="buttonFastForward"
+                                GridPane.columnIndex="3" GridPane.rowIndex="0"
+                                onAction="#buttonFastForward"/>
 
                     </GridPane>
                 </content>
@@ -149,10 +156,6 @@
 
         </tabs>
     </TabPane>
-
-    <Button fx:id="buttonRunSim"
-            GridPane.columnIndex="1" GridPane.rowIndex="0"
-            onAction="#runSim"/>
 
     <TabPane GridPane.columnIndex="0" GridPane.rowIndex="1"
              GridPane.columnSpan="2" tabClosingPolicy="UNAVAILABLE">

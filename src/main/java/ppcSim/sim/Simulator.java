@@ -30,37 +30,51 @@ public class Simulator {
 
     public SimResults runAsync(guiUpdateRunnable callback){
 
-        int controllerQuantity = powerPlants.length;
-        String[] controllerNames = new String[controllerQuantity];
-        for (int i = 0; i < controllerQuantity; i++) {
-            controllerNames[i] = powerPlants[i].getControllerName();
-        }
+        simulatorSettings.simStop = false;
+        simulatorSettings.simPause = false;
 
-        SimResults simResults = new SimResults(controllerNames);
+        SimResults simResults = new SimResults(getControllerNames());
 
+        double lastTimeStamp = java.lang.System.currentTimeMillis();
         double timeStamp = 0;
 
-        while (timeStamp < simulatorSettings.simLength) {
+        while (!simulatorSettings.simStop) {
 
-            timeStamp += simulatorSettings.simStepSize;
-            double[] irradiance = sun.getIrradiance(timeStamp);
-            double plantSetPoint = setPoint.getSetPoint(timeStamp);
+            if(!simulatorSettings.simPause) {
 
-            for (int i = 0; i < powerPlants.length; i++) {
-                simResults.putPlantDataInstant(i, powerPlants[i].step(timeStamp, irradiance, plantSetPoint)); ;
-            }
+                timeStamp += (java.lang.System.currentTimeMillis() - lastTimeStamp) *
+                        simulatorSettings.simRate / 1000;
 
-            Platform.runLater(new Runnable() {
-                @Override
-                public void run() {
-                    callback.run(simResults);
+                double[] irradiance = sun.getIrradiance(timeStamp);
+                double plantSetPoint = setPoint.getSetPoint(timeStamp);
+
+                for (int i = 0; i < powerPlants.length; i++) {
+                    simResults.putPlantDataInstant(i, powerPlants[i].step(timeStamp, irradiance, plantSetPoint));
+                    ;
                 }
-            });
 
-            try {
-                Thread.sleep((long) (simulatorSettings.simStepSize * 1000));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                Platform.runLater(new Runnable() {
+                    @Override
+                    public void run() {
+                        callback.run(simResults);
+                    }
+                });
+
+                lastTimeStamp = java.lang.System.currentTimeMillis();
+
+                try {
+                    Thread.sleep((long) (500 / simulatorSettings.simRate));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+
+            }else{
+                try {
+                    lastTimeStamp = java.lang.System.currentTimeMillis();
+                    Thread.sleep(250);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
@@ -68,30 +82,14 @@ public class Simulator {
         return simResults;
     }
 
-    public SimResults run(){
+    private String[] getControllerNames(){
         int controllerQuantity = powerPlants.length;
         String[] controllerNames = new String[controllerQuantity];
-
         for (int i = 0; i < controllerQuantity; i++) {
             controllerNames[i] = powerPlants[i].getControllerName();
         }
 
-        SimResults simResults = new SimResults(controllerNames);
-
-        double startingTimeInMillis = java.lang.System.currentTimeMillis();
-        double timeStamp = 0;
-
-        while (timeStamp < simulatorSettings.simLength) {
-            timeStamp = ( java.lang.System.currentTimeMillis() - startingTimeInMillis ) / 1000;
-            double[] irradiance = sun.getIrradiance(timeStamp);
-            double plantSetPoint = setPoint.getSetPoint(timeStamp);
-
-            for (int i = 0; i < powerPlants.length; i++) {
-                simResults.putPlantDataInstant(i, powerPlants[i].step(timeStamp, irradiance, plantSetPoint)); ;
-            }
-        }
-
-        return simResults;
+        return controllerNames;
     }
 
 }

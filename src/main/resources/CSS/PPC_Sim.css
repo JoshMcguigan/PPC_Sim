@@ -2,6 +2,18 @@
     -fx-opacity: 0;
 }
 
-#buttonRunSim {
-    -fx-graphic: url('../Icons/Process-50.png');
+#buttonPlay {
+    -fx-graphic: url('../Icons/Play-48.png');
+}
+
+#buttonPause {
+    -fx-graphic: url('../Icons/Pause-48.png');
+}
+
+#buttonFastForward {
+    -fx-graphic: url('../Icons/Fast-Forward-48.png');
+}
+
+#buttonStop {
+    -fx-graphic: url('../Icons/Stop-48.png');
 }

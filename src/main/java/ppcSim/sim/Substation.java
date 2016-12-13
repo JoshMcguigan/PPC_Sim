@@ -8,14 +8,17 @@ import java.util.stream.*;
 class Substation {
 
     private SubstationSettings settings;
-
     private Map<Double,Double> dataStore; // Stores <timeStamp, calculated plant power>
+
+    private double sitePower;
 
     Substation(SubstationSettings settings){
 
         this.settings = settings;
 
         dataStore = new HashMap<Double,Double>();
+
+        sitePower = 0;
     }
 
     double getPlantPower(double[] invPower, double timeStamp){
@@ -25,7 +28,6 @@ class Substation {
 
         // Search for keys (timeStamps) which are older than current timeStamp-deadTime
         Double selectedTime = 0.0;
-        Double sitePower = 0.0;
         for (Double key: dataStore.keySet() ){
             if ( timeStamp - settings.deadTime >= key){
                 // Choose the latest time stamp which is before the deadTime
