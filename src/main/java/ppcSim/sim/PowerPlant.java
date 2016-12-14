@@ -42,4 +42,6 @@ class PowerPlant {
         return controller.getControllerName();
     }
 
+    AbstractController getController() { return controller; }
+
 }

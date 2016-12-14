@@ -10,6 +10,7 @@ public class Simulator {
     private AbstractSun sun;
     private AbstractSetPoint setPoint;
     private PowerPlant[] powerPlants;
+    private boolean simHasRan;
 
     public Simulator(SimulatorSettings simulatorSettings, SubstationSettings substationSettings,
                      AbstractSun sun, AbstractSetPoint setPoint,
@@ -18,6 +19,8 @@ public class Simulator {
         this.simulatorSettings = simulatorSettings;
         this.sun = sun;
         this.setPoint = setPoint;
+
+        simHasRan = false;
 
         // Create a power plant object for each controller to be tested
         this.powerPlants = new PowerPlant[controllers.length];
@@ -29,6 +32,10 @@ public class Simulator {
     }
 
     public SimResults runAsync(guiUpdateRunnable callback){
+
+        if (simHasRan){
+            throw new IllegalStateException("Simulation object can only be ran once.");
+        }
 
         simulatorSettings.simStop = false;
         simulatorSettings.simPause = false;
@@ -79,7 +86,16 @@ public class Simulator {
 
         }
 
+        shutdownControllers();
+        simHasRan = true;
+
         return simResults;
+    }
+
+    private void shutdownControllers(){
+        for (PowerPlant powerPlant: powerPlants) {
+            powerPlant.getController().shutdown();
+        }
     }
 
     private String[] getControllerNames(){

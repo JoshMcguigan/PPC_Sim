@@ -1,3 +1,4 @@
+ensure modbus client socket closes when done with that simulation object (make simulation objects one time use?)
 convert analysis tools to use new sim results format
 ensure all simulation classes can update to realtime settings changes
 modify simulator to allow set point type of irradiance type changes in real time

@@ -8,11 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Slider;
-
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ppcSim.analysis.AnalysisResult;
 import ppcSim.analysis.Analyzer;
@@ -39,8 +35,9 @@ public class Controller {
 
     private final int secondsPerMinute = 60;
 
-    // Simulation Settings
+    private boolean simActive; // boolean true when there is an active simulation, either playing or paused
 
+    // Simulation Settings
 
     // Irradiance Settings
     @FXML private Slider sliderIrrBaseLevel;
@@ -91,6 +88,8 @@ public class Controller {
         setupControllerSettingsTab();
         setupAnalysisSettingsTab();
 
+        simActive = false;
+
     }
 
 
@@ -99,44 +98,63 @@ public class Controller {
     }
 
     @FXML protected void buttonPause(ActionEvent event) {
-        simulatorSettings.simPause = !simulatorSettings.simPause;
+        simulatorSettings.simPause = true;
     }
 
     @FXML protected void buttonStop(ActionEvent event) {
-        simulatorSettings.simStop = !simulatorSettings.simStop;
+        shutdown();
     }
 
-    @FXML protected void buttonFastForward(ActionEvent event) { simulatorSettings.simRate *= 2; }
+    @FXML protected void buttonFastForward(ActionEvent event) {
+
+        double rateMax = 8;
+
+        if (simulatorSettings.simRate <= (rateMax / 2) ){
+            simulatorSettings.simRate *= 2;
+        }
+    }
+
+    void shutdown(){
+        simulatorSettings.simStop = true;
+        simActive = false;
+    }
 
     private void runSim(){
 
-        List<AbstractController> controllers = new ArrayList<>();
-        controllers.add(new NaiveController(controllerSettings ,simulatorSettings.invQuantity,
-                inverterSettings.maxPower));
-        controllers.add(new OpenLoopController(controllerSettings, simulatorSettings.invQuantity,
-                inverterSettings.maxPower));
-        controllers.add(new ProportionalStepController(controllerSettings, simulatorSettings.invQuantity,
-                inverterSettings.maxPower));
-        controllers.add(new ComplexController(controllerSettings, simulatorSettings.invQuantity,
-                inverterSettings.maxPower));
-        controllers.add(new ModbusClientController(controllerSettings, simulatorSettings.invQuantity,
-                inverterSettings.maxPower));
+        if (!simActive) {
 
-        sun = getNewSun();
-        setPoint = getNewSetPoint();
+            simActive = true;
 
-        simulator = new Simulator(simulatorSettings, substationSettings, sun, setPoint,
-                controllers.toArray(new AbstractController[controllers.size()]), inverterSettings);
+            List<AbstractController> controllers = new ArrayList<>();
+            controllers.add(new NaiveController(controllerSettings, simulatorSettings.invQuantity,
+                    inverterSettings.maxPower));
+            controllers.add(new OpenLoopController(controllerSettings, simulatorSettings.invQuantity,
+                    inverterSettings.maxPower));
+            controllers.add(new ProportionalStepController(controllerSettings, simulatorSettings.invQuantity,
+                    inverterSettings.maxPower));
+            controllers.add(new ComplexController(controllerSettings, simulatorSettings.invQuantity,
+                    inverterSettings.maxPower));
+            controllers.add(new ModbusClientController(controllerSettings, simulatorSettings.invQuantity,
+                    inverterSettings.maxPower));
 
-        new Thread(() -> simulator.runAsync(new guiUpdateRunnable() {
-            @Override
-            public void run(SimResults simResults) {
-                updateChart(simResults);
-                updateAnalysis(simResults.getPlantDataAsArray(), simResults.getControllerNames());
-            }
-        })).start();
+            sun = getNewSun();
+            setPoint = getNewSetPoint();
 
+            simulator = new Simulator(simulatorSettings, substationSettings, sun, setPoint,
+                    controllers.toArray(new AbstractController[controllers.size()]), inverterSettings);
 
+            new Thread(() -> simulator.runAsync(new guiUpdateRunnable() {
+                @Override
+                public void run(SimResults simResults) {
+                    updateChart(simResults);
+                    updateAnalysis(simResults.getPlantDataAsArray(), simResults.getControllerNames());
+                }
+            })).start();
+
+        } else{
+            simulatorSettings.simPause = false;
+            simulatorSettings.simRate = 1;
+        }
 
 
     }

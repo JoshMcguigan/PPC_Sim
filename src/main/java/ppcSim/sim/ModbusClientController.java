@@ -124,7 +124,7 @@ public class ModbusClientController extends AbstractController{
         }
     }
 
-    private void shutdownModbusServer(){
+    void shutdown(){
         slave.shutdown();
     }
 
