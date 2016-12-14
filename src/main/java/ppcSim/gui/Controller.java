@@ -8,7 +8,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.*;
+import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Slider;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ppcSim.analysis.AnalysisResult;
 import ppcSim.analysis.Analyzer;
@@ -27,7 +30,7 @@ public class Controller {
     private ControllerSettings controllerSettings;
     private SetPointSettings setPointSettings;
 
-    private double analysisStartMinute = 5;
+    private double analysisStartMinute = 0;
 
     private Simulator simulator;
     private AbstractSun sun;
@@ -36,6 +39,12 @@ public class Controller {
     private final int secondsPerMinute = 60;
 
     private boolean simActive; // boolean true when there is an active simulation, either playing or paused
+
+    private String[] controllerNames;
+    private ObservableList<XYChart.Series<Double, Double>> lineChartData;
+    private LineChart.Series<Double, Double> setPointSeries;
+    private List<LineChart.Series<Double,Double>> plantOutputSeries;
+
 
     // Simulation Settings
 
@@ -68,8 +77,6 @@ public class Controller {
     @FXML private TableColumn columnTotalEnergyNotIncludingOverProduction;
     @FXML private TableColumn columnTotalEnergy;
     @FXML private TableColumn columnGreatestInstantaneousOverProduction;
-
-
 
 
     @FXML
@@ -143,6 +150,8 @@ public class Controller {
             simulator = new Simulator(simulatorSettings, substationSettings, sun, setPoint,
                     controllers.toArray(new AbstractController[controllers.size()]), inverterSettings);
 
+            initializeChart();
+
             new Thread(() -> simulator.runAsync(new guiUpdateRunnable() {
                 @Override
                 public void run(SimResults simResults) {
@@ -182,41 +191,48 @@ public class Controller {
         }
     }
 
-    private void updateChart (SimResults simResults){
-
-        String[] controllerNames = simResults.getControllerNames();
-
-        ObservableList<XYChart.Series<Double, Double>> lineChartData = FXCollections.observableArrayList();
-
-        // Create plant output data sets
-        for (int controller = 0; controller < controllerNames.length; controller++) {
-
-            LineChart.Series<Double,Double> plantOutput = new LineChart.Series<Double, Double>();
-            plantOutput.setName(controllerNames[controller]);
-
-            for (int i = 0; i < simResults.getPlantDataSize(controller); i++) {
-                Double x = simResults.getPlantData(controller,i).timeStamp / secondsPerMinute;
-                Double y = simResults.getPlantData(controller,i).plantPowerOutput;
-                plantOutput.getData().add(new XYChart.Data<Double,Double>(x,y));
-            }
-
-            lineChartData.add(plantOutput);
-        }
+    private void initializeChart(){
+        controllerNames = simulator.getControllerNames();
+        lineChartData = FXCollections.observableArrayList();
 
         // Create set point data set
-        LineChart.Series<Double, Double> setPoint = new LineChart.Series<Double, Double>();
-        setPoint.setName("Set Point");
-        for (int i = 0; i < simResults.getPlantDataSize(0); i++) {
-            Double x = simResults.getPlantData(0,i).timeStamp / secondsPerMinute;
-            Double y = simResults.getPlantData(0,i).plantSetPoint;
-            setPoint.getData().add(new XYChart.Data<Double,Double>(x,y));
-        }
-        lineChartData.add(setPoint);
+        setPointSeries = new LineChart.Series<Double, Double>();
+        setPointSeries.setName("Set Point");
+        lineChartData.add(setPointSeries);
 
+        // Create plant output data sets
+        plantOutputSeries = new ArrayList<LineChart.Series<Double, Double>>();
+
+        for (int controller = 0; controller < controllerNames.length; controller++) {
+            plantOutputSeries.add(new LineChart.Series<Double,Double>());
+            plantOutputSeries.get(controller).setName(controllerNames[controller]);
+            lineChartData.add(plantOutputSeries.get(controller));
+        }
 
         chart.setCreateSymbols(false);
         chart.setData(lineChartData);
         chart.createSymbolsProperty();
+
+    }
+
+    private void updateChart (SimResults simResults){
+
+        Double x;
+        Double y;
+
+        int newestDataIndex = simResults.getPlantDataSize(0) - 1;
+
+        x = simResults.getPlantData(0,newestDataIndex).timeStamp / secondsPerMinute;
+        y = simResults.getPlantData(0,newestDataIndex).plantSetPoint;
+        setPointSeries.getData().add(new XYChart.Data<Double,Double>(x,y));
+
+
+        for (int i = 0; i < controllerNames.length; i++) {
+            x = simResults.getPlantData(i,newestDataIndex).timeStamp / secondsPerMinute;
+            y = simResults.getPlantData(i, newestDataIndex).plantPowerOutput;
+            plantOutputSeries.get(i).getData().add(new XYChart.Data<Double,Double>(x,y));
+        }
+
     }
 
     private void updateAnalysis (PlantDataInstant[][] plantDataInstant, String[] controllerNames){

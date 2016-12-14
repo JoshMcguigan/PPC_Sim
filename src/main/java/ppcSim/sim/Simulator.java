@@ -98,7 +98,7 @@ public class Simulator {
         }
     }
 
-    private String[] getControllerNames(){
+    public String[] getControllerNames(){
         int controllerQuantity = powerPlants.length;
         String[] controllerNames = new String[controllerQuantity];
         for (int i = 0; i < controllerQuantity; i++) {
