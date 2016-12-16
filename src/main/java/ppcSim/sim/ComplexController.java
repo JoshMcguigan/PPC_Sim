@@ -67,7 +67,7 @@ public class ComplexController extends AbstractTimeBasedController {
             // Limit inverter set points for inverters which are under producing
             for (int i = 0; i < invQuantity; i++) {
                 if (belowSetPoint[i]) {
-                    powerSetPoints[i] *= belowSetPointDeadBand * .01;
+                    powerSetPoints[i] = (currentInverterPower[i] / invPowerMax) * 100 / belowSetPointDeadBand;
                 }
             }
         }
