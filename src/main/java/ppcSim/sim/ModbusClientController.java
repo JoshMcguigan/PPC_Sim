@@ -19,13 +19,14 @@ import java.util.concurrent.ExecutionException;
 // Sets up a Modbus server to be used for testing power plant controllers which act as Modbus clients
 public class ModbusClientController extends AbstractController{
 
+    private static final int PORT = 50200;
     private final ModbusTcpSlaveConfig config = new ModbusTcpSlaveConfig.Builder().build();
     private final ModbusTcpSlave slave = new ModbusTcpSlave(config);
 
     private short[] modbusTable;
     /*
     Modbus Table (where N = inverter quantity):
-    Registers 1->N: Inverter set point %
+    Registers 1->N: Inverter set point % * 100 (0-10000)
     Registers 101->1NN: Inverter power output KW
     Register 301: Plant power set point KW
     Register 302: Plant power output KW
@@ -42,8 +43,11 @@ public class ModbusClientController extends AbstractController{
     double[] getPowerSetPoints(double plantPowerSetPoint, double currentPlantPower, double[] currentInverterPower, double timeStamp){
 
         for (int i = 0; i < invQuantity; i++) {
-            powerSetPoints[i] = modbusTable[i];
 
+            // update power set point for each inverter
+            powerSetPoints[i] = modbusTable[i] / 100;
+
+            // update current inverter power
             modbusTable[100+i] = (short) (currentInverterPower[i] * 1000);
         }
 
@@ -118,7 +122,7 @@ public class ModbusClientController extends AbstractController{
         });
 
         try {
-            slave.bind("0.0.0.0", 50200).get();
+            slave.bind("0.0.0.0", PORT).get();
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
