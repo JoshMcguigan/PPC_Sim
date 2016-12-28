@@ -52,7 +52,12 @@ public class ModbusClientController extends AbstractController{
         }
 
         modbusTable[300] = (short) (plantPowerSetPoint * 1000);
-        modbusTable[301] = (short) (currentPlantPower * 1000);
+
+        if (currentPlantPower > 0) {
+            modbusTable[301] = (short) (currentPlantPower * 1000);
+        } else {
+            modbusTable[301] = 0;
+        }
 
         return powerSetPoints;
     }

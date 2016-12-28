@@ -1,3 +1,4 @@
+fix bug where plant makes power even when all inverters commanded to zero
 convert analysis tools to use new sim results format, and to be more efficient (only look at newest data)
 ensure all simulation classes can update in realtime with settings changes
 modify simulator to allow set point type of irradiance type changes in real time
