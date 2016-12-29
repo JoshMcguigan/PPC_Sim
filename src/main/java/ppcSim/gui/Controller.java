@@ -116,8 +116,8 @@ public class Controller {
 
         double rateMax = 8;
 
-        if (simulatorSettings.simRate <= (rateMax / 2) ){
-            simulatorSettings.simRate *= 2;
+        if (simulatorSettings.simRateMultiplier <= (rateMax / 2) ){
+            simulatorSettings.simRateMultiplier *= 2;
         }
     }
 
@@ -162,7 +162,7 @@ public class Controller {
 
         } else{
             simulatorSettings.simPause = false;
-            simulatorSettings.simRate = 1;
+            simulatorSettings.simRateMultiplier = 1;
         }
 
 

@@ -50,7 +50,7 @@ public class Simulator {
             if(!simulatorSettings.simPause) {
 
                 timeStamp += (java.lang.System.currentTimeMillis() - lastTimeStamp) *
-                        simulatorSettings.simRate / 1000;
+                        simulatorSettings.simRateMultiplier / 1000;
 
                 double[] irradiance = sun.getIrradiance(timeStamp);
                 double plantSetPoint = setPoint.getSetPoint(timeStamp);
@@ -70,7 +70,7 @@ public class Simulator {
                 lastTimeStamp = java.lang.System.currentTimeMillis();
 
                 try {
-                    Thread.sleep((long) (500 / simulatorSettings.simRate));
+                    Thread.sleep((long) (500 / simulatorSettings.simRateMultiplier));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
