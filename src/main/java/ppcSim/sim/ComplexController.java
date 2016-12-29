@@ -2,8 +2,8 @@ package ppcSim.sim;
 
 public class ComplexController extends AbstractTimeBasedController {
 
-    private double atSetPointDeadBand = 98; // Inverter must produce at least this fraction of set point to be considered producing at set point, in %
-    private double belowSetPointDeadBand = 96; // Inverters producing less than this fraction of set point are considered to be under-producing, in %
+    private double atSetPointLevel = 98; // Inverter must produce at least this fraction of set point to be considered producing at set point, in %
+    private double belowSetPointLevel = 96; // Inverters producing less than this fraction of set point are considered to be under-producing, in %
 
     private boolean[] belowSetPoint; // Used to track which inverters are underperforming
     private boolean[] atSetPoint; // Used to track inverters which are performing at set point
@@ -33,13 +33,13 @@ public class ComplexController extends AbstractTimeBasedController {
         atSetPointQuantity = 0;
         belowSetPointQuantity = 0;
         for (int i = 0; i < invQuantity; i++) {
-            if ((currentInverterPower[i] / invPowerMax) > (powerSetPoints[i] * atSetPointDeadBand * .0001)) {
+            if ((currentInverterPower[i] / invPowerMax) > (powerSetPoints[i] * atSetPointLevel * .0001)) {
                 atSetPoint[i] = true;
                 atSetPointQuantity += 1;
             } else {
                 atSetPoint[i] = false;
             }
-            if ((currentInverterPower[i] / invPowerMax) < (powerSetPoints[i] * belowSetPointDeadBand * .0001)) {
+            if ((currentInverterPower[i] / invPowerMax) < (powerSetPoints[i] * belowSetPointLevel * .0001)) {
                 belowSetPoint[i] = true;
                 belowSetPointQuantity += 1;
             } else {
@@ -48,7 +48,13 @@ public class ComplexController extends AbstractTimeBasedController {
         }
 
         // Determine plant state
-        inDeadBand = !(plantPowerSetPoint - currentPlantPower > settings.deadBand);
+        if ( (currentPlantPower < plantPowerSetPoint) &&
+                (plantPowerSetPoint - currentPlantPower < settings.deadBand) ){
+            inDeadBand = true;
+        } else {
+            inDeadBand = false;
+        }
+
         overProduction = currentPlantPower > plantPowerSetPoint;
 
 
