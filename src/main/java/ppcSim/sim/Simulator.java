@@ -5,6 +5,7 @@ import ppcSim.gui.guiUpdateRunnable;
 
 public class Simulator {
 
+    private static final int simulatorExecutionRateInMSec = 500;
     private SimulatorSettings simulatorSettings;
 
     private AbstractSun sun;
@@ -70,7 +71,7 @@ public class Simulator {
                 lastTimeStamp = java.lang.System.currentTimeMillis();
 
                 try {
-                    Thread.sleep((long) (500 / simulatorSettings.simRateMultiplier));
+                    Thread.sleep((long) (simulatorExecutionRateInMSec));
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

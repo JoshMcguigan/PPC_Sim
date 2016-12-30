@@ -25,7 +25,7 @@ public class ModbusClientController extends AbstractController{
 
     private short[] modbusTable;
     /*
-    Modbus Table (where N = inverter quantity):
+    Modbus Table (where N = inverter quantity, for a 1-based Modbus device):
     Registers 1->N: Inverter set point % * 100 (0-10000)
     Registers 101->1NN: Inverter power output KW
     Register 301: Plant power set point KW
@@ -45,7 +45,7 @@ public class ModbusClientController extends AbstractController{
         for (int i = 0; i < invQuantity; i++) {
 
             // update power set point for each inverter
-            powerSetPoints[i] = modbusTable[i] / 100;
+            powerSetPoints[i] = (float) modbusTable[i] / 100;
 
             // update current inverter power
             modbusTable[100+i] = (short) (currentInverterPower[i] * 1000);

@@ -16,7 +16,7 @@ abstract class AbstractTimeBasedController extends AbstractController {
         super(invQuantity, invPowerMax);
 
         this.settings = settings;
-        maxStepSizePerExecution = ( settings.maxRampRate / 60 ) * settings.executionRate;
+        maxStepSizePerExecution = ( settings.targetRampRate / 60 ) * settings.executionRate;
         lastExecutionTime = 0;
 
     }

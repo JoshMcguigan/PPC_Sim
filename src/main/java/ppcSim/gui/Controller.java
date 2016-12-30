@@ -131,6 +131,7 @@ public class Controller {
         if (!simActive) {
 
             simActive = true;
+            simulatorSettings.simRateMultiplier = 1;
 
             List<AbstractController> controllers = new ArrayList<>();
             controllers.add(new NaiveController(controllerSettings, simulatorSettings.invQuantity,
@@ -313,7 +314,7 @@ public class Controller {
     private void setupControllerSettingsTab(){
 
         setupSlider(sliderControllerExecutionRate, 5, 30, controllerSettings.executionRate);
-        setupSlider(sliderControllerRampRate, 0, 50, controllerSettings.maxRampRate);
+        setupSlider(sliderControllerRampRate, 0, 50, controllerSettings.targetRampRate);
         setupSlider(sliderControllerDeadBand, 0, 5, controllerSettings.deadBand);
 
         sliderControllerExecutionRate.valueProperty().addListener(new ChangeListener<Number>() {
@@ -325,7 +326,7 @@ public class Controller {
         sliderControllerRampRate.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                controllerSettings.maxRampRate = Math.max((double)newValue, 1);
+                controllerSettings.targetRampRate = Math.max((double)newValue, 1);
             }
         });
         sliderControllerDeadBand.valueProperty().addListener(new ChangeListener<Number>() {
