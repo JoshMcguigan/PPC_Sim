@@ -2,8 +2,8 @@ package ppcSim.sim;
 
 public class ComplexController extends AbstractTimeBasedController {
 
-    private double atSetPointLevel = 98; // Inverter must produce at least this fraction of set point to be considered producing at set point, in %
-    private double belowSetPointLevel = 96; // Inverters producing less than this fraction of set point are considered to be under-producing, in %
+    private double atSetPointDeadBand = 2; // Inverter producing greater than (set point - atSetPointDeadBand) are considered producing at set point, in %
+    private double belowSetPointDeadBand = 4; // Inverters producing less than (set point - belowSetPointDeadBand) are considered to be under-producing, in %
     private double maxInverterRampRateMultiplier = 2; // Maximum ramp rate for any individual inverter, as a multiple of the plant target ramp rate
 
     private boolean[] belowSetPoint; // Used to track which inverters are underperforming
@@ -34,13 +34,13 @@ public class ComplexController extends AbstractTimeBasedController {
         atSetPointQuantity = 0;
         belowSetPointQuantity = 0;
         for (int i = 0; i < invQuantity; i++) {
-            if ((currentInverterPower[i] / invPowerMax) > (powerSetPoints[i] * atSetPointLevel * .0001)) {
+            if ((currentInverterPower[i] / invPowerMax) * 100 > (powerSetPoints[i] - atSetPointDeadBand)) {
                 atSetPoint[i] = true;
                 atSetPointQuantity += 1;
             } else {
                 atSetPoint[i] = false;
             }
-            if ((currentInverterPower[i] / invPowerMax) < (powerSetPoints[i] * belowSetPointLevel * .0001)) {
+            if ((currentInverterPower[i] / invPowerMax) * 100 < (powerSetPoints[i] - belowSetPointDeadBand)) {
                 belowSetPoint[i] = true;
                 belowSetPointQuantity += 1;
             } else {
@@ -73,10 +73,10 @@ public class ComplexController extends AbstractTimeBasedController {
         } else {
             // Limit inverter set points for inverters which are under producing
             // Set the new set point so the current power output is right between the under and over producing limits
-            double productionLimitsAverage = ( (atSetPointLevel + belowSetPointLevel) / 2 ) / 100;
+            double productionLimitsAverage = ( (atSetPointDeadBand + belowSetPointDeadBand) / 2 ) / 100;
             for (int i = 0; i < invQuantity; i++) {
                 if (belowSetPoint[i]) {
-                    powerSetPoints[i] = (currentInverterPower[i] / invPowerMax) * 100 / productionLimitsAverage;
+                    powerSetPoints[i] = (currentInverterPower[i] / invPowerMax) * 100 / ( 1 - productionLimitsAverage );
                 }
             }
         }
