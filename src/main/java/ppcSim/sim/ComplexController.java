@@ -2,8 +2,8 @@ package ppcSim.sim;
 
 public class ComplexController extends AbstractTimeBasedController {
 
-    private double atSetPointDeadBand = 2; // Inverter producing greater than (set point - atSetPointDeadBand) are considered producing at set point, in %
-    private double belowSetPointDeadBand = 4; // Inverters producing less than (set point - belowSetPointDeadBand) are considered to be under-producing, in %
+    private double atSetPointDeadBand = 1; // Inverter producing greater than (set point - atSetPointDeadBand) are considered producing at set point, in %
+    private double belowSetPointDeadBand = 2; // Inverters producing less than (set point - belowSetPointDeadBand) are considered to be under-producing, in %
     private double maxInverterRampRateMultiplier = 2; // Maximum ramp rate for any individual inverter, as a multiple of the plant target ramp rate
 
     private boolean[] belowSetPoint; // Used to track which inverters are underperforming
