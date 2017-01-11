@@ -49,14 +49,14 @@ public class ComplexController extends AbstractTimeBasedController {
         }
 
         // Determine plant state
-        if ( (currentPlantPower < plantPowerSetPoint) &&
-                (plantPowerSetPoint - currentPlantPower < settings.deadBand) ){
+        if ( (currentPlantPower < plantPowerSetPoint - settings.setPointOffset) &&
+                (plantPowerSetPoint - settings.setPointOffset - currentPlantPower < settings.deadBand) ){
             inDeadBand = true;
         } else {
             inDeadBand = false;
         }
 
-        overProduction = currentPlantPower > plantPowerSetPoint;
+        overProduction = currentPlantPower > plantPowerSetPoint - settings.setPointOffset;
 
 
         // If the plant is overproducing, step down the power
@@ -64,7 +64,7 @@ public class ComplexController extends AbstractTimeBasedController {
         if (overProduction) {
 
             // Calculate step down size in order to bring the plant power down to middle of dead band
-            stepDownSize = Math.min(maxStepSizePerExecution, ((currentPlantPower - plantPowerSetPoint + (0.5 * settings.deadBand)) / (invQuantity * invPowerMax)) * 100);
+            stepDownSize = Math.min(maxStepSizePerExecution, ((currentPlantPower - plantPowerSetPoint + settings.setPointOffset + (0.5 * settings.deadBand)) / (invQuantity * invPowerMax)) * 100);
 
             for (int i = 0; i < invQuantity; i++) {
                 // Set the reduced power set point based on actual current production
@@ -91,7 +91,7 @@ public class ComplexController extends AbstractTimeBasedController {
             // Step size is reduced when current plant power is close to set point, in order to target middle of deadband
             stepUpSize = Math.min(
                     maxStepSizePerExecution,
-                    (((plantPowerSetPoint - currentPlantPower - (settings.deadBand / 2)) / plantPowerMax) * 100)
+                    (((plantPowerSetPoint - settings.setPointOffset - currentPlantPower - (settings.deadBand / 2)) / plantPowerMax) * 100)
                     )
                     * Math.min( (invQuantity / atSetPointQuantity), maxInverterRampRateMultiplier );
 
