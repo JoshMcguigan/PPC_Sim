@@ -24,14 +24,14 @@ class PowerPlant {
     }
 
 
-    PlantDataInstant step(double timeStamp, double[] irradiance, double plantPowerSetPoint){
+    PlantDataInstant step(double timeStamp, double[] irradiance, double plantPowerSetPoint, boolean[] invOnline){
 
         double avgIrr = DoubleStream.of(irradiance).sum() / irradiance.length;
         double plantPower = substation.getPlantPower(invPower, timeStamp);
         powerSetPoints = controller.getPowerSetPoints(plantPowerSetPoint, plantPower, invPower, timeStamp);
 
         for (int i = 0; i < inverters.length; i++) {
-            invPower[i] = inverters[i].getPower(powerSetPoints[i], irradiance[i]);
+            invPower[i] = inverters[i].getPower(powerSetPoints[i], irradiance[i], invOnline[i]);
         }
 
         return new PlantDataInstant(plantPowerSetPoint, avgIrr, powerSetPoints, invPower, plantPower, timeStamp);

@@ -6,6 +6,7 @@ public class SimulatorSettings {
     public double simRateMultiplier = 1; // rate at which the simulation runs (multiplier, 1 is real-time)
     public boolean simPause = false;
     public boolean simStop = false;
+    public boolean[] invOnline; // allows toggling inverters online and offline
 
     public SimulatorSettings(){
 

@@ -10,6 +10,7 @@
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.collections.FXCollections?>
 <?import java.lang.String?>
+<?import java.lang.Integer?>
 <GridPane fx:controller="ppcSim.gui.Controller"
           xmlns:fx="http://javafx.com/fxml" alignment="CENTER" hgap="20" vgap="10">
     <padding><Insets top="5" right="25" bottom="10" left="25"/></padding>
@@ -137,6 +138,19 @@
                         <Slider GridPane.columnIndex="2" GridPane.rowIndex="1"
                                 fx:id="sliderControllerDeadBand"></Slider>
 
+
+                    </GridPane>
+                </content>
+            </Tab>
+
+            <Tab text="Inverter Settings">
+                <content>
+                    <GridPane alignment="CENTER" hgap="20" vgap="10">
+                        <padding><Insets top="15" bottom="0"/></padding>
+
+                        <CheckBox fx:id="checkboxToggleInverterOnline"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                  onAction="#checkboxToggleInverterOnline" selected="true"/>
 
                     </GridPane>
                 </content>

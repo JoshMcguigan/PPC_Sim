@@ -24,7 +24,13 @@ class Inverter {
         return inverterArray;
     }
 
-    double getPower(double powerSetPoint, double irr){
+    double getPower(double powerSetPoint, double irr, boolean inverterOnline){
+
+        // If the inverter is not online, return zero power output
+        if (!inverterOnline){
+            return 0;
+        }
+
         // powerSetPoint specifies maximum power output, as a percent of maxPower
         // irr is current irradiance in W/m^2
 

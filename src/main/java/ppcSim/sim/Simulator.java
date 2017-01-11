@@ -3,6 +3,8 @@ package ppcSim.sim;
 import javafx.application.Platform;
 import ppcSim.gui.guiUpdateRunnable;
 
+import java.util.Arrays;
+
 public class Simulator {
 
     private static final int simulatorExecutionRateInMSec = 500;
@@ -22,6 +24,10 @@ public class Simulator {
         this.setPoint = setPoint;
 
         simHasRan = false;
+
+        // initialize inverter online status array with all inverters online
+        this.simulatorSettings.invOnline = new boolean[this.simulatorSettings.invQuantity];
+        Arrays.fill(this.simulatorSettings.invOnline, true);
 
         // Create a power plant object for each controller to be tested
         this.powerPlants = new PowerPlant[controllers.length];
@@ -57,8 +63,7 @@ public class Simulator {
                 double plantSetPoint = setPoint.getSetPoint(timeStamp);
 
                 for (int i = 0; i < powerPlants.length; i++) {
-                    simResults.putPlantDataInstant(i, powerPlants[i].step(timeStamp, irradiance, plantSetPoint));
-                    ;
+                    simResults.putPlantDataInstant(i, powerPlants[i].step(timeStamp, irradiance, plantSetPoint, simulatorSettings.invOnline));
                 }
 
                 Platform.runLater(new Runnable() {

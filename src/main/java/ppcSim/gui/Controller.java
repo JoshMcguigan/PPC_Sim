@@ -8,10 +8,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Slider;
-import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableView;
+import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import ppcSim.analysis.AnalysisResult;
 import ppcSim.analysis.Analyzer;
@@ -64,6 +61,9 @@ public class Controller {
     @FXML private Slider sliderControllerExecutionRate;
     @FXML private Slider sliderControllerRampRate;
     @FXML private Slider sliderControllerDeadBand;
+
+    // Inverter Settings
+    @FXML private CheckBox checkboxToggleInverterOnline;
 
     // Analysis Settings
     @FXML private Slider sliderAnalysisStartTime;
@@ -119,6 +119,12 @@ public class Controller {
         if (simulatorSettings.simRateMultiplier <= (rateMax / 2) ){
             simulatorSettings.simRateMultiplier *= 2;
         }
+    }
+
+    @FXML protected void checkboxToggleInverterOnline(ActionEvent event) {
+
+        simulatorSettings.invOnline[0] = checkboxToggleInverterOnline.isSelected();
+
     }
 
     void shutdown(){
