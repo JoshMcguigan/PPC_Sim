@@ -64,6 +64,7 @@ public class Controller {
 
     // Inverter Settings
     @FXML private CheckBox checkboxToggleInverterOnline;
+    @FXML private Spinner spinnerInverterSelection;
 
     // Analysis Settings
     @FXML private Slider sliderAnalysisStartTime;
@@ -93,6 +94,7 @@ public class Controller {
         setupIrradianceSettingsTab();
         setupSetPointSettingsTab();
         setupControllerSettingsTab();
+        setupInverterSettingsTab();
         setupAnalysisSettingsTab();
 
         simActive = false;
@@ -123,8 +125,10 @@ public class Controller {
 
     @FXML protected void checkboxToggleInverterOnline(ActionEvent event) {
 
-        simulatorSettings.invOnline[0] = checkboxToggleInverterOnline.isSelected();
-
+        if (simulatorSettings.invOnline != null) {
+            int selectedInverter = Integer.valueOf(spinnerInverterSelection.getValue().toString());
+            simulatorSettings.invOnline[selectedInverter - 1] = checkboxToggleInverterOnline.isSelected();
+        }
     }
 
     void shutdown(){
@@ -343,6 +347,17 @@ public class Controller {
         });
     }
 
+    private void setupInverterSettingsTab(){
+
+        spinnerInverterSelection.valueProperty().addListener(new ChangeListener() {
+            @Override
+            public void changed(ObservableValue observable, Object oldValue, Object newValue) {
+                updateSelectedInverter(Integer.valueOf(newValue.toString()));
+            }
+        });
+        
+    }
+
     private void setupAnalysisSettingsTab() {
 
         setupSlider(sliderAnalysisStartTime, 0, 60, analysisStartMinute);
@@ -363,6 +378,12 @@ public class Controller {
         slider.setShowTickLabels(true);
         slider.setShowTickMarks(true);
         slider.setMajorTickUnit(Math.max((int) ((maxValue-minValue) / 4), 1));
+    }
+
+    private void updateSelectedInverter(int newValue){
+        if (simulatorSettings.invOnline != null) {
+            checkboxToggleInverterOnline.setSelected(simulatorSettings.invOnline[newValue - 1]);
+        }
     }
 
 }

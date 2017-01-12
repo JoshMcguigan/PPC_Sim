@@ -148,8 +148,21 @@
                     <GridPane alignment="CENTER" hgap="20" vgap="10">
                         <padding><Insets top="15" bottom="0"/></padding>
 
+                        <fx:define>
+                            <Integer fx:id="min" fx:value="1"/>
+                            <Integer fx:id="max" fx:value="20"/>
+                        </fx:define>
+
+                        <Label text="Inverter Selection"
+                               GridPane.columnIndex="0" GridPane.rowIndex="0"></Label>
+                        <Spinner fx:id="spinnerInverterSelection"
+                            GridPane.columnIndex="0" GridPane.rowIndex="1"
+                            min="$min" max="$max"></Spinner>
+
+                        <Label text="Online"
+                               GridPane.columnIndex="1" GridPane.rowIndex="0"></Label>
                         <CheckBox fx:id="checkboxToggleInverterOnline"
-                                  GridPane.columnIndex="1" GridPane.rowIndex="0"
+                                  GridPane.columnIndex="1" GridPane.rowIndex="1"
                                   onAction="#checkboxToggleInverterOnline" selected="true"/>
 
                     </GridPane>
